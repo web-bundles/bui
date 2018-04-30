@@ -1,0 +1,20 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>org.beangle.bundles</groupId>
+    <artifactId>beangle-bundles-parent</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.beangle.bundles</groupId>
+  <artifactId>beangle-bundles-bui</artifactId>
+  <version>0.0.2</version>
+  <packaging>jar</packaging>
+  <name>Beangle Bundles Beangle UI</name>
+
+  <properties>
+    <bundle.symbolicName>org.beangle.bundles.bui</bundle.symbolicName>
+    <bundle.namespace>org.beangle.bundles.bui</bundle.namespace>
+  </properties>
+
+</project>
