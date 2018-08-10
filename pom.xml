@@ -3,18 +3,19 @@
   <parent>
     <groupId>org.beangle.bundles</groupId>
     <artifactId>beangle-bundles-parent</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.beangle.bundles</groupId>
   <artifactId>beangle-bundles-bui</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   <packaging>jar</packaging>
   <name>Beangle Bundles Beangle UI</name>
 
   <properties>
     <bundle.symbolicName>org.beangle.bundles.bui</bundle.symbolicName>
     <bundle.namespace>org.beangle.bundles.bui</bundle.namespace>
+    <bundle.code>bui</bundle.code>
   </properties>
 
 </project>

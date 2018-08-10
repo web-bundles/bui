@@ -122,7 +122,7 @@
 
 .toolbar-item-transfer{float:left;padding:1px 2px 1px 2px;background-color:#e9f2f8;border:1px solid #336699;cursor:pointer;}
 
-.toolbar-menu{margin-top:1px;margin-left:0px;background-color:#e9f2f8;visibility:hidden;position:absolute;z-index:100;padding:1px;overflow:visible;border:solid 1px #4791C5;white-space:nowrap;}
+.toolbar-menu{margin-top:1px;margin-left:0px;background-color:#e9f2f8;display:block;position:absolute;z-index:100;padding:1px;overflow:visible;border:solid 1px #4791C5;white-space:nowrap;}
 
 .toolbar-menuitem{padding:1px 2px 1px 2px;cursor:pointer;}
 
@@ -286,8 +286,7 @@ table.infoTable > thead > th {
     text-align:right;
 }
 .infoTable .content{
-    padding-left: 1px;
-    padding-right: 1px;
+    padding: 0px 1px;
 }
 .infoTitle{
 }
@@ -344,7 +343,6 @@ table.settingTable td{
     font-weight: bold;
     color: red;
     background-color: #EBEBEB;
-    /*text-align: right;*/
 }
 .tfvNormal {
     font-weight: normal;
