@@ -408,7 +408,7 @@
       return this;
     }
     this.addEntityAction=function(entity,onePage){
-      return new bg.entityaction(entity,onePage);
+      return bg.entityaction(entity,onePage);
     }
     this.addPrint=function(msg){
       for(var i=0;i<this.toolbars.length;i++){
