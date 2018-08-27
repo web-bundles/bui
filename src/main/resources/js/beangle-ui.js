@@ -801,7 +801,6 @@
   function EntityAction(entity,onePage){
     this.entity=entity;
     this.page=onePage;
-    this.formid="form_" + bg.randomInt();
 
     //record self for closure method
     var selfaction = this;
@@ -819,12 +818,15 @@
         return shortAction+sufix;
       }
     };
+
     this.getForm=function (){
       return this.page.getForm();
     };
+
     this.addParam = function(name,value){
       bg.form.addInput(this.getForm(),name,value);
     }
+
     if(null!=this.page.target&&''!=this.page.target){
       var fm = this.getForm();
       if(null!=fm) fm.target=this.page.target;
@@ -873,7 +875,7 @@
 
     this.info = function(){
       return new NamedFunction('info',function(){
-        selfaction.submitIdAction('info',false)
+        selfaction.submitIdAction('{id}',false)
       },bg.ui.grid.enableDynaBar?'e1':'ge0');
     }
 
@@ -929,7 +931,9 @@
     }
   }
 
-  bg.extend({entityaction:EntityAction});
+  bg.extend({entityaction:function(entity,onePage){
+     return new EntityAction(entity,onePage);
+  });
 
   bg.extend({'ui.module':{
     moduleClick:function (moudleId){

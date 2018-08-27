@@ -780,14 +780,6 @@
       this.orderby=newstring;
       return this;
     }
-    this.target=function(givenTarget,elemId){
-      if(givenTarget){
-        this.target=givenTarget;
-      }else if(elemId){
-        this.target=bg.findTarget(document.getElementById(elemId));
-      }
-      return this;
-    }
 
     this.getForm = function(){
       myForm=document.getElementById(this.formid);
