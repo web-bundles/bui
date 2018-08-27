@@ -781,6 +781,15 @@
       return this;
     }
 
+    this.setTarget=function(givenTarget,elemId){
+      if(givenTarget){
+        this.target=givenTarget;
+      }else if(elemId){
+        this.target=bg.findTarget(document.getElementById(elemId));
+      }
+      return this;
+    }
+
     this.getForm = function(){
       myForm=document.getElementById(this.formid);
       if(null==myForm){
