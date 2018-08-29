@@ -933,7 +933,7 @@
 
   bg.extend({entityaction:function(entity,onePage){
      return new EntityAction(entity,onePage);
-  });
+  }});
 
   bg.extend({'ui.module':{
     moduleClick:function (moudleId){
