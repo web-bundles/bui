@@ -100,7 +100,7 @@
 
 .toolbar-separator{padding-left:0px;width:1px;float:left;}
 
-.toolbar-title{float:left;}
+.toolbar-title{float:left;line-height: 100%;}
 
 .toolbar-msg{float:left;height:21px;padding:2px 3px 2px 3px; margin:1px 0px 1px 10px;background-color:#F9EDBE;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom-left-radius:5px;border-bottom-right-radius:5px}
 

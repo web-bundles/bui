@@ -780,7 +780,8 @@
       this.orderby=newstring;
       return this;
     }
-    this.target=function(givenTarget,elemId){
+
+    this.setTarget=function(givenTarget,elemId){
       if(givenTarget){
         this.target=givenTarget;
       }else if(elemId){
