@@ -796,17 +796,15 @@
     }
   });
 
-  // Action---------------------------------------------------------------------
-  //this.action,this.paramstring,this.target
-  function EntityAction(entity,onePage){
-    this.entity=entity;
-    this.page=onePage;
+function RestUrlRender{
+  this.names={"remove":'?_method=delete',"info":'{id}',"edit":'{id}/edit'}
 
-    //record self for closure method
-    var selfaction = this;
+  this.render=function(action,method,params){
+      if(this.names[method]){
+         method=this.names[method];
+      }
+      if(method.indexOf("{id}")>=0) method = method.replace("{id}",params['ids']);
 
-    this.applyMethod=function(method){
-      var action= this.page.actionurl
       var last1=action.lastIndexOf("/"), lastDot=action.lastIndexOf("."), shortAction=action, sufix="";
       if(-1 == last1) last1 = lastDot;
       if(-1!=last1) shortAction=action.substring(0,last1);
@@ -817,8 +815,50 @@
       }else{
         return shortAction+sufix;
       }
-    };
+  }
+}
 
+function StrutsUrlRender{
+  this.names={"new":"edit"}
+
+  this.render=function(action,method,params){
+    if(this.names[method]){
+       method=this.names[method];
+    }
+    var last1=action.lastIndexOf("!"), lastDot=action.lastIndexOf("."), shortAction=action, sufix="";
+    if(-1 == last1) last1 = lastDot;
+    if(-1!=last1){
+      shortAction=action.substring(0,last1);
+    }
+    if(-1!=lastDot){
+      sufix=action.substring(lastDot);
+    }
+    return shortAction+"!"+method+sufix;
+  }
+}
+
+bg.extend({urlRender:new RestUrlRender()});
+bg.extend({renderAs:function(style){
+   if(style=="struts"){
+     bg.urlRender=new StrutsUrlRender();
+   }else if(style=="rest"){
+     bg.urlRender=new RestUrlRender();
+   }else{
+     alert("Cannot support unknow urlrender "+style);
+   }
+}});
+  // Action---------------------------------------------------------------------
+  //this.action,this.paramstring,this.target
+  function EntityAction(entity,onePage){
+    this.entity=entity;
+    this.page=onePage;
+
+    //record self for closure method
+    var selfaction = this;
+
+    this.render_url(method,params){
+      return bg.urlRender.render(this.page.actionurl,method,params);
+    }
     this.getForm=function (){
       return this.page.getForm();
     };
@@ -845,12 +885,11 @@
         if(!confirm(confirmMsg))return;
       }
       var form=this.getForm();
-      if(method.indexOf("{id}")>=0) method = method.replace("{id}",ids)
-      else {
+      form.action = this.render_url(method,{"id":ids});
+      if(form.action.indeOf("/"+ids)<0){
         if(isMulti) bg.form.addInputs(form,this.entity+".id",ids.split(","));
         else bg.form.addInput(form,this.entity+".id",ids);
       }
-      form.action = this.applyMethod(method);
       if(this.page.paramstr){
         bg.form.addHiddens(form,this.page.paramstr);
         bg.form.addParamsInput(form,this.page.paramstr);
@@ -860,7 +899,7 @@
     this.remove=function(confirmMsg){
       confirmMsg=confirmMsg||'确认删除?';
       return new NamedFunction('remove',function(){
-        selfaction.submitIdAction('?_method=delete',true,confirmMsg)
+        selfaction.submitIdAction('remove',true,confirmMsg);
       },bg.ui.grid.enableDynaBar?'ge1':'ge0');
     }
     this.add = function(){
@@ -869,19 +908,19 @@
         if(""!=selfaction.page.paramstr) bg.form.addHiddens(form,selfaction.page.paramstr);
         bg.form.addInput(form,selfaction.entity + '.id',"");
         if(""!=selfaction.page.paramstr) bg.form.addParamsInput(form,selfaction.page.paramstr);
-        bg.form.submit(form,selfaction.applyMethod("new"));
+        bg.form.submit(form,selfaction.render_url("new"));
       });
     }
 
     this.info = function(){
       return new NamedFunction('info',function(){
-        selfaction.submitIdAction('{id}',false)
+        selfaction.submitIdAction('info',false)
       },bg.ui.grid.enableDynaBar?'e1':'ge0');
     }
 
     this.edit = function (){
       return new NamedFunction('edit',function(){
-        selfaction.submitIdAction('{id}/edit',false);
+        selfaction.submitIdAction('edit',false);
       },bg.ui.grid.enableDynaBar?'e1':'ge0');
     }
 
@@ -917,7 +956,7 @@
           bg.form.addHiddens(form,selfaction.page.paramstr);
           bg.form.addParamsInput(form,selfaction.page.paramstr);
         }
-        bg.form.submit(form,selfaction.applyMethod(methodName),null,null,ajax);
+        bg.form.submit(form,selfaction.render_url(methodName),null,null,ajax);
       });
     }
 
