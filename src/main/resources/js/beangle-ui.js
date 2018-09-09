@@ -803,7 +803,7 @@ function RestUrlRender(){
       if(this.names[method]){
          method=this.names[method];
       }
-      if(method.indexOf("{id}")>=0) method = method.replace("{id}",params['ids']);
+      if(method.indexOf("{id}")>=0) method = method.replace("{id}",params['id']);
 
       var last1=action.lastIndexOf("/"), lastDot=action.lastIndexOf("."), shortAction=action, sufix="";
       if(-1 == last1) last1 = lastDot;
@@ -887,7 +887,7 @@ bg.extend({renderAs:function(style){
       }
       var form=this.getForm();
       form.action = this.render_url(method,{"id":ids});
-      if(form.action.indeOf("/"+ids)<0){
+      if(form.action.indexOf("/"+ids)<0){
         if(isMulti) bg.form.addInputs(form,this.entity+".id",ids.split(","));
         else bg.form.addInput(form,this.entity+".id",ids);
       }
