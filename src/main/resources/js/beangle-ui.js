@@ -796,14 +796,14 @@
     }
   });
 
-function RestUrlRender{
+function RestUrlRender(){
   this.names={"remove":'?_method=delete',"info":'{id}',"edit":'{id}/edit'}
 
   this.render=function(action,method,params){
       if(this.names[method]){
          method=this.names[method];
       }
-      if(method.indexOf("{id}")>=0) method = method.replace("{id}",params['ids']);
+      if(method.indexOf("{id}")>=0) method = method.replace("{id}",params['id']);
 
       var last1=action.lastIndexOf("/"), lastDot=action.lastIndexOf("."), shortAction=action, sufix="";
       if(-1 == last1) last1 = lastDot;
@@ -818,7 +818,7 @@ function RestUrlRender{
   }
 }
 
-function StrutsUrlRender{
+function StrutsUrlRender(){
   this.names={"new":"edit"}
 
   this.render=function(action,method,params){
@@ -856,9 +856,10 @@ bg.extend({renderAs:function(style){
     //record self for closure method
     var selfaction = this;
 
-    this.render_url(method,params){
+    this.render_url = function(method,params){
       return bg.urlRender.render(this.page.actionurl,method,params);
-    }
+    };
+
     this.getForm=function (){
       return this.page.getForm();
     };
@@ -886,7 +887,7 @@ bg.extend({renderAs:function(style){
       }
       var form=this.getForm();
       form.action = this.render_url(method,{"id":ids});
-      if(form.action.indeOf("/"+ids)<0){
+      if(form.action.indexOf("/"+ids)<0){
         if(isMulti) bg.form.addInputs(form,this.entity+".id",ids.split(","));
         else bg.form.addInput(form,this.entity+".id",ids);
       }
@@ -894,7 +895,11 @@ bg.extend({renderAs:function(style){
         bg.form.addHiddens(form,this.page.paramstr);
         bg.form.addParamsInput(form,this.page.paramstr);
       }
-      bg.form.submit(form,null,null,null,ajax);
+      if(ajax && (ajax=="_blank" || ajax=="_new")){
+        bg.form.submit(form,null,ajax,null,false);
+      }else{
+        bg.form.submit(form,null,null,null,ajax);
+      }
     }
     this.remove=function(confirmMsg){
       confirmMsg=confirmMsg||'确认删除?';
@@ -956,7 +961,11 @@ bg.extend({renderAs:function(style){
           bg.form.addHiddens(form,selfaction.page.paramstr);
           bg.form.addParamsInput(form,selfaction.page.paramstr);
         }
-        bg.form.submit(form,selfaction.render_url(methodName),null,null,ajax);
+        if(ajax && (ajax=="_blank" || ajax=="_new")){
+          bg.form.submit(form,selfaction.render_url(methodName),ajax,null,false);
+        }else{
+          bg.form.submit(form,selfaction.render_url(methodName),null,null,ajax);
+        }
       });
     }
 

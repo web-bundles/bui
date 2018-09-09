@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.beangle.bundles</groupId>
   <artifactId>beangle-bundles-bui</artifactId>
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.0.5</version>
   <packaging>jar</packaging>
   <name>Beangle Bundles Beangle UI</name>
 

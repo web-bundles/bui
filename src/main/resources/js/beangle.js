@@ -47,7 +47,7 @@
         var mz = document.createElement('div');
         mz.setAttribute('id', 'messageZone');
         mz.style.position = "absolute";
-        mz.style.zIndex = "1000";
+        mz.style.zIndex = "1040";
         mz.style.top = "0px";
         mz.style.right = "0px";
         mz.style.width = "55px";
