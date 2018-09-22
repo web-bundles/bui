@@ -41,7 +41,6 @@
     this.itemCount=0;
     this.bar=document.getElementById(divId);
     if(null==this.bar){
-      //bg.alert("cannot find div with id " + divId);
       return;
     }
     this.bar.innerHTML="";
@@ -237,7 +236,7 @@
     this.addMenu = function(title,action,imageName,alt){
       this.addSeparatorAsNeed();
       var item_div = document.createElement('div');
-      item_div.className="toolbar-item";
+      item_div.className="toolbar-item toolbar-item-ge0";
       var menuTableId=this.id+this.itemCount+"_menu";
       item_div.id=menuTableId;
       item_div.tabIndex = 0;
