@@ -133,6 +133,10 @@
           jQuery(state.data.container +' .box[value=' + value + ']').prop('checked', true);
         });
       }
+      if(typeof afterApplyState=="function"){
+        afterApplyState();
+        afterApplyState=null;
+      }
     },
     submit : function(form,action,target){
         if(jQuery.type(form)=="string" && form.indexOf("#")!=0){

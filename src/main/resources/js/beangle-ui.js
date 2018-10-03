@@ -528,7 +528,7 @@
   });
   bg.extend({
     'ui.grid':{
-      enableSingleRowSelect : false,
+      enableSingleRowSelect : false, //是否每次选择后，仅仅选中当前，其他统统取消
       enableDynaBar:true,
       enableSelectTip:true,
       // 鼠标经过和移出排序表格的表头时
@@ -596,6 +596,14 @@
       },
       /**通知gridbar中的按钮,更新是否显示等状态*/
       notifyGridbar: function (gridId,selectedCount){
+        if(typeof selectedCount == "undefined"){
+          selectedCount=0;
+          jQuery("#"+gridId + " .gridselect").each(function(){
+            if(jQuery(this).find("input").is(":checked")){
+              selectedCount +=1;
+            }
+          });
+        }
         //change toolbar item
         var changeToolbarItem=function(){
           if(selectedCount>=2) {
@@ -614,7 +622,7 @@
           jQuery('#'+gridId+'_bar2_items .toolbar-item').each(changeToolbarItem);
         }
         if(bg.ui.grid.enableSelectTip){
-          if(selectedCount>1) bg.ui.grid.setGridMessage(gridId,"已选 <b>"+selectedCount+"</b> 条");
+          if(selectedCount>1) bg.ui.grid.setGridMessage(gridId,"已选 <strong>"+selectedCount+"</strong> 条");
           else  bg.ui.grid.setGridMessage(gridId,"");
         }
       },
