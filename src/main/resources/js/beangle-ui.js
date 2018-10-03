@@ -41,7 +41,6 @@
     this.itemCount=0;
     this.bar=document.getElementById(divId);
     if(null==this.bar){
-      //bg.alert("cannot find div with id " + divId);
       return;
     }
     this.bar.innerHTML="";
@@ -237,7 +236,7 @@
     this.addMenu = function(title,action,imageName,alt){
       this.addSeparatorAsNeed();
       var item_div = document.createElement('div');
-      item_div.className="toolbar-item";
+      item_div.className="toolbar-item toolbar-item-ge0";
       var menuTableId=this.id+this.itemCount+"_menu";
       item_div.id=menuTableId;
       item_div.tabIndex = 0;
@@ -495,7 +494,7 @@
     pageInputJ.attr("id",pageDiv.id+"_input");
     pageInputJ.attr('title',(onePage.startNo +" - " + onePage.endNo + " of " + onePage.totalItems));
     pageInputJ.focus(function(){this.value=''});
-    pageInputJ.blur(function(){if(!this.value) this.value= onePage.pageIndex;changePage();});
+    pageInputJ.blur(function(){if(!this.value) {this.value = onePage.pageIndex;}changePage();});
 
     //add go button
     var submitBtn = document.createElement('input');
@@ -510,7 +509,10 @@
       onePage.goPage(pageIndex,document.getElementById(pageDiv.id+'_select').value);
     }
     jQuery(submitBtn).click(function (){changePage()});
-    if(pageIdxSelect) pageIdxSelect.onchange=function(){changePage();}
+    if(pageIdxSelect) pageIdxSelect.onchange=function(){
+      document.getElementById(pageDiv.id+'_input').value="1";
+      changePage();
+    }
 
     pageDiv.appendChild(pagespan);
     jQuery(pagespan).keypress(function(event){
@@ -526,7 +528,7 @@
   });
   bg.extend({
     'ui.grid':{
-      enableSingleRowSelect : false,
+      enableSingleRowSelect : false, //是否每次选择后，仅仅选中当前，其他统统取消
       enableDynaBar:true,
       enableSelectTip:true,
       // 鼠标经过和移出排序表格的表头时
@@ -594,6 +596,14 @@
       },
       /**通知gridbar中的按钮,更新是否显示等状态*/
       notifyGridbar: function (gridId,selectedCount){
+        if(typeof selectedCount == "undefined"){
+          selectedCount=0;
+          jQuery("#"+gridId + " .gridselect").each(function(){
+            if(jQuery(this).find("input").is(":checked")){
+              selectedCount +=1;
+            }
+          });
+        }
         //change toolbar item
         var changeToolbarItem=function(){
           if(selectedCount>=2) {
@@ -612,7 +622,7 @@
           jQuery('#'+gridId+'_bar2_items .toolbar-item').each(changeToolbarItem);
         }
         if(bg.ui.grid.enableSelectTip){
-          if(selectedCount>1) bg.ui.grid.setGridMessage(gridId,"已选 <b>"+selectedCount+"</b> 条");
+          if(selectedCount>1) bg.ui.grid.setGridMessage(gridId,"已选 <strong>"+selectedCount+"</strong> 条");
           else  bg.ui.grid.setGridMessage(gridId,"");
         }
       },
@@ -724,7 +734,6 @@
       init : function (tableId,onePage){
         var table= document.getElementById(tableId), thead = table.tHead, tbody, orderBy, columnSort ,i ,j, head, row, cell, desc, asc, orignRowCls;
         if(!thead || thead.rows.length==0){
-          //bg.alert("sortTable ["+tableId+"] without thead");
           return;
         }
         orderBy=onePage.orderby;
@@ -796,10 +805,10 @@
     }
   });
 
-function RestUrlRender(){
-  this.names={"remove":'?_method=delete',"info":'{id}',"edit":'{id}/edit'}
+  function RestUrlRender(){
+    this.names={"remove":'?_method=delete',"info":'{id}',"edit":'{id}/edit'}
 
-  this.render=function(action,method,params){
+    this.render=function(action,method,params){
       if(this.names[method]){
          method=this.names[method];
       }
@@ -815,40 +824,39 @@ function RestUrlRender(){
       }else{
         return shortAction+sufix;
       }
+    }
   }
-}
 
-function StrutsUrlRender(){
-  this.names={"new":"edit"}
+  function StrutsUrlRender(){
+    this.names={"new":"edit"}
 
-  this.render=function(action,method,params){
-    if(this.names[method]){
-       method=this.names[method];
+    this.render=function(action,method,params){
+      if(this.names[method]){
+        method=this.names[method];
+      }
+      var last1=action.lastIndexOf("!"), lastDot=action.lastIndexOf("."), shortAction=action, sufix="";
+      if(-1 == last1) last1 = lastDot;
+      if(-1!=last1){
+        shortAction=action.substring(0,last1);
+      }
+      if(-1!=lastDot){
+        sufix=action.substring(lastDot);
+      }
+      return shortAction+"!"+method+sufix;
     }
-    var last1=action.lastIndexOf("!"), lastDot=action.lastIndexOf("."), shortAction=action, sufix="";
-    if(-1 == last1) last1 = lastDot;
-    if(-1!=last1){
-      shortAction=action.substring(0,last1);
-    }
-    if(-1!=lastDot){
-      sufix=action.substring(lastDot);
-    }
-    return shortAction+"!"+method+sufix;
   }
-}
 
-bg.extend({urlRender:new RestUrlRender()});
-bg.extend({renderAs:function(style){
-   if(style=="struts"){
-     bg.urlRender=new StrutsUrlRender();
-   }else if(style=="rest"){
-     bg.urlRender=new RestUrlRender();
-   }else{
-     alert("Cannot support unknow urlrender "+style);
-   }
-}});
+  bg.extend({urlRender:new RestUrlRender()});
+  bg.extend({renderAs:function(style){
+     if(style=="struts"){
+       bg.urlRender=new StrutsUrlRender();
+     }else if(style=="rest"){
+       bg.urlRender=new RestUrlRender();
+     }else{
+       alert("Cannot support unknow urlrender "+style);
+     }
+  }});
   // Action---------------------------------------------------------------------
-  //this.action,this.paramstring,this.target
   function EntityAction(entity,onePage){
     this.entity=entity;
     this.page=onePage;
