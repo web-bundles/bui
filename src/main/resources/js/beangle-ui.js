@@ -47,7 +47,7 @@
     this.id=divId;
     this.separator="&nbsp;";
     this.bar.className="toolbar notprint";
-    var imagePath=bg.base + "/icons/16x16/actions/";
+    var imagePath=bg.base + "icons/16x16/actions/";
 
     this.setTitle=function(newTitle,imageName){
       if(!newTitle) return;
