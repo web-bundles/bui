@@ -808,6 +808,13 @@
   function RestUrlRender(){
     this.names={"remove":'?_method=delete',"info":'{id}',"edit":'{id}/edit'}
 
+    this.isParamUrl = function(method){
+      if(this.names[method]){
+        return this.names[method].indexOf('{')!= -1;
+      }else{
+        return false;
+      }
+    }
     this.render=function(action,method,params){
       if(this.names[method]){
          method=this.names[method];
@@ -829,6 +836,10 @@
 
   function StrutsUrlRender(){
     this.names={"new":"edit"}
+
+    this.isParamUrl = function(method){
+      return false;
+    }
 
     this.render=function(action,method,params){
       if(this.names[method]){
@@ -868,6 +879,10 @@
       return this.urlRender.render(this.page.actionurl,method,params);
     };
 
+    this.isParamUrl = function(method){
+      return this.urlRender.isParamUrl(method);
+    };
+
     this.getForm=function (){
       return this.page.getForm();
     };
@@ -895,7 +910,7 @@
       }
       var form=this.getForm();
       form.action = this.render_url(method,{"id":ids});
-      if(form.action.indexOf("/"+ids)<0){
+      if(!this.isParamUrl(method)){
         if(isMulti) bg.form.addInputs(form,this.entity+".id",ids.split(","));
         else bg.form.addInput(form,this.entity+".id",ids);
       }
