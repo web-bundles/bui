@@ -184,26 +184,29 @@ div.message img.icon {
     vertical-align: middle;
 }
 
-.search-widget{
+table .search-widget{
     border-collapse: collapse;
     border-width:0px;
     margin:auto;
     width:100%;
 }
-.search-widget .search-item{
-    text-align:right;
-}
-.search-widget label{
+
+table .search-widget label{
     font-weight: normal;
     margin:0px 0px;
 }
-.search-widget tbody> tr > td{
+table .search-widget tbody> tr > td{
     padding:1px;
 }
-.search-item input{
+
+table .search-widget .search-item{
+    text-align:right;
+}
+
+td .search-item input{
     width:100px;
 }
-.search-item select{
+td .search-item select{
     width:100px;
 }
 
@@ -275,17 +278,19 @@ table.infoTable > thead > th {
     height: 22px;
 }
 
-.infoTable .title{
+table .infoTable .title{
     height: 22px;
     background-color:#F5EDDB;
     padding-left: 2px;
     padding-right: 2px;
     text-align:right;
 }
-.infoTable .content{
+
+table .infoTable .content{
     padding: 0px 1px;
 }
-.infoTitle{
+
+table.infoTitle{
 }
 
 /** Index Panel*/
@@ -344,56 +349,6 @@ table.settingTable td{
 .tfvNormal {
     font-weight: normal;
     color: black;
-}
-
-/*
- * 导航菜单
- */
-.navmenu {
-    left: 6px;
-    background: none repeat scroll 0 0 #507AAA;
-    clear: both;
-    height: 30px;
-    padding: 0 10px;
-    font-size: 13px;
-}
-
-.navmenu ul {
-    padding: 0;
-    float: left;
-    height: 25px;
-    margin: 5px 0 0;
-    list-style-type: none;
-}
-
-.navmenu li {
-    float: left;
-    margin: 0 2px 0 0;
-    padding: 0;
-    white-space: nowrap;
-    font-weight: bold;
-}
-
-.navmenu li a {
-    color: #FFFFFF;
-    display: inline-block;
-    margin: 0;
-    padding: 0px 10px;
-    height: 25px;
-    line-height: 24px;
-    outline: 0 none;
-    text-decoration: none;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-
-.navmenu li a:hover {
-    background: none repeat scroll 0 0 #759FCF;
-    color: #FFFFFF;
-}
-.navmenu li a.selected, .navmenu li a.selected:hover {
-    color: #555555;
-    background: none repeat scroll 0 0 #FFFFFF;
 }
 
 .ui-disabled{
@@ -537,3 +492,14 @@ form.listform li.foot {
 .action-update{ background-position: -318px -66px; width: 16px; height: 16px; }
 .action-user-logout{ background-position: -384px -66px; width: 16px; height: 16px; }
 .action-user-trash{ background-position: -450px -66px; width: 16px; height: 16px; }
+
+/*
+ * patches
+ */
+.nav-tabs > li > a {
+    padding: 5px 15px;
+}
+
+.chosen-container{
+  text-align:left;
+}

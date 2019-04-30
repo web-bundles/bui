@@ -918,7 +918,7 @@
         bg.form.addHiddens(form,this.page.paramstr);
         bg.form.addParamsInput(form,this.page.paramstr);
       }
-      if(ajax && (ajax=="_blank" || ajax=="_new")){
+      if(ajax && ajax=="_blank"){
         bg.form.submit(form,null,ajax,null,false);
       }else{
         bg.form.submit(form,null,null,null,ajax);
