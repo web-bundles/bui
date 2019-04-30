@@ -178,7 +178,7 @@
       if("_self"==target){ self.location=url;}
       else if("_parent"==target){self.parent.location=url;}
       else if("_top" ==target){self.top.location=url;}
-      else if("_new" ==target || "_blank" ==target  ){window.open(url);}
+      else if("_blank" ==target  ){window.open(url);}
       else{
         if(!bg.isAjaxTarget(target)){
           //FIXME _blank,_top
@@ -199,7 +199,7 @@
     },
     isAjaxTarget : function (target){
       if(!target) return false;
-      if(target==""||target=="_new"||target=="_blank"||target=="_self"||target=="_parent"||target=="_top"){
+      if(target==""||target=="_blank"||target=="_self"||target=="_parent"||target=="_top"){
         return false;
       }
       targetEle=document.getElementById(target);
@@ -211,7 +211,7 @@
       return true;
     },
     normalTarget : function(target){
-      if(target==""||target=="new"||target=="_blank"||target=="_self"||target=="_parent"){
+      if(target==""||target=="_blank"||target=="_self"||target=="_parent"){
         return target;
       }
       var targetObj = document.getElementById(target);
