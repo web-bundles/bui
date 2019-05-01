@@ -897,6 +897,8 @@
             async :false
             });
             bg.scriptCache[file] = true;
+        }else{
+          successFunction();
         }
     },
 
