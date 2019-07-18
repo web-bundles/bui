@@ -911,8 +911,12 @@
       var form=this.getForm();
       form.action = this.render_url(method,{"id":ids});
       if(!this.isParamUrl(method)){
-        if(isMulti) bg.form.addInputs(form,this.entity+".id",ids.split(","));
-        else bg.form.addInput(form,this.entity+".id",ids);
+        if(isMulti) {
+          bg.form.removeInputs(form,this.entity+".id");
+          bg.form.addInputs(form,this.entity+".id",ids.split(","));
+        } else {
+          bg.form.addInput(form,this.entity+".id",ids);
+        }
       }
       if(this.page.paramstr){
         bg.form.addHiddens(form,this.page.paramstr);
@@ -952,11 +956,11 @@
       },bg.ui.grid.enableDynaBar?'e1':'ge0');
     }
 
-    this.single = function(methodName,confirmMsg,extparams){
+    this.single = function(methodName,confirmMsg,extparams,ajax){
       return new NamedFunction(methodName,function(){
         var form=selfaction.getForm();
         if(null!=extparams) bg.form.addHiddens(form,extparams);
-        selfaction.submitIdAction(methodName,false,confirmMsg);
+        selfaction.submitIdAction(methodName,false,confirmMsg,ajax);
       },bg.ui.grid.enableDynaBar?'e1':'ge0');
     }
 
@@ -984,7 +988,7 @@
           bg.form.addHiddens(form,selfaction.page.paramstr);
           bg.form.addParamsInput(form,selfaction.page.paramstr);
         }
-        if(ajax && (ajax=="_blank" || ajax=="_new")){
+        if(ajax && ajax=="_blank"){
           bg.form.submit(form,selfaction.render_url(methodName),ajax,null,false);
         }else{
           bg.form.submit(form,selfaction.render_url(methodName),null,null,ajax);

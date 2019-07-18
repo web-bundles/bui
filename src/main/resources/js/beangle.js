@@ -525,6 +525,9 @@
           form.appendChild(input);
         }
       },
+      removeInputs : function (form,name){
+        jQuery(form).children("input[name="+name.replace(".","\\.")+"]").remove();
+      },
       ecodeParams : function (params){
         if(""==params)return "";
         var paramsPair=params.split("&"), newParams="", i, eqIndex;
