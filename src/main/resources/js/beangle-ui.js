@@ -365,13 +365,17 @@
 
   bg.extend({'ui.gridbar':function(divIds,title){
     this.divIds=divIds;
-    this.pageId=null;
+    this.pageId=null; // Deprecated,Usage not found.
     this.title=title;
     this.toolbars=[];
     for(var i=0;i<divIds.length;i++){
       this.toolbars[i]=bg.ui.toolbar(divIds[i],title);
       this.toolbars[i].setSeparator("");
-      document.getElementById(divIds[i]).className="gridbar";
+      if(i==0){
+        document.getElementById(divIds[i]).className="gridbar gridbar-top";
+      }else{
+        document.getElementById(divIds[i]).className="gridbar gridbar-bottom";
+      }
       document.getElementById(divIds[i]+"_items").className="gridbar-items";
     }
     this.pageId=function(givenId){
@@ -526,6 +530,7 @@
     }
   }
   });
+
   bg.extend({
     'ui.grid':{
       enableSingleRowSelect : false, //是否每次选择后，仅仅选中当前，其他统统取消
