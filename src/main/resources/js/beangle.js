@@ -525,6 +525,9 @@
           form.appendChild(input);
         }
       },
+      removeInputs : function (form,name){
+        jQuery(form).children("input[name="+name.replace(".","\\.")+"]").remove();
+      },
       ecodeParams : function (params){
         if(""==params)return "";
         var paramsPair=params.split("&"), newParams="", i, eqIndex;
@@ -857,7 +860,7 @@
           if(value!="")  bg.form.addInput(myForm,key,value,"hidden");
         }
         if(this.target && document.getElementById(this.target)){
-          bg.form.ajaxSubmit(this.formid,this.actionurl,this.target);
+          bg.form.submit(this.formid,this.actionurl,this.target);
         }else{
           myForm.submit();
         }
@@ -915,7 +918,7 @@
             bg.styleCache[cssFile] = true;
         }
     },
-    
+
   });
 
 

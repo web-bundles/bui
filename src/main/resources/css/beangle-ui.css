@@ -25,13 +25,13 @@
 
 .grid-caption{background-color: #333333;color: #FFFFFF;margin-bottom: 0;padding: 5px;font-weight: bold;}
 
-.gridempty{border:solid;border-width:1px;border-top-width:0px;border-color:#006CB2;text-align:center;}
+.gridempty{border: 0px solid #006CB2;text-align:center;}
 
-.gridtable {width:100%;border-collapse: collapse;border:solid;border-width:1px 0px 0px 0px;border-color:#006CB2;vertical-align: middle;table-layout:fixed}
+.gridtable {width:100%;border-collapse: collapse;border-style: hidden;vertical-align: middle;table-layout:fixed}
 
-.gridtable td{border-color:#006CB2;border-style:solid;border-width:0 1px 1px 0;overflow:hidden;word-wrap:break-word;text-align:center;}
+.gridtable td{border: 1px solid #006CB2;overflow:hidden;word-wrap:break-word;text-align:center;}
 
-.gridtable th{border-color:#006CB2;border-style:solid;border-width:0 1px 1px 0;text-align:center;}
+.gridtable th{border: 1px solid #006CB2;text-align:center;}
 
 .grid-filter-submit {background-image: url(../icons/16x16/actions/edit-find.png);background-repeat: no-repeat;background-color:transparent;width:16px;height:16px;border-style:none}
 
@@ -51,6 +51,10 @@
 
 .gridhead-sortable{cursor:pointer;}
 
+.gridhead input[type="text"] {
+    border: thin solid #ccc;
+    height:27px;
+}
 .griddata{}
 
 .griddata-odd{text-decoration: none;letter-spacing:0;background-color: #f9f9f9;}
@@ -64,9 +68,15 @@
 .gridbar{
     height:23px;
     background-color: #c7dbff;
-    border:solid;
-    border-color:#006CB2;
-    border-width:0px;
+    border: 0px solid #006CB2;
+}
+
+.gridbar-top{
+    border-bottom-width:1px;
+}
+
+.gridbar-bottom{
+    border-top-width:1px;
 }
 
 .gridbar-items{float:left;clear:both;}
@@ -203,9 +213,12 @@ table .search-widget .search-item{
     text-align:right;
 }
 
-td .search-item input{
+td .search-item input[type="text"]{
     width:100px;
+    border: thin solid #CCC;
+    height:27px;
 }
+
 td .search-item select{
     width:100px;
 }
@@ -428,6 +441,10 @@ form.listform li.foot {
     padding-left: 110px;
 }
 
+form.listform input[type="text"] {
+    border:thin solid #ccc;
+    height:27px;
+}
 /*
  * Module UI Style
  */

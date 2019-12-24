@@ -365,13 +365,17 @@
 
   bg.extend({'ui.gridbar':function(divIds,title){
     this.divIds=divIds;
-    this.pageId=null;
+    this.pageId=null; // Deprecated,Usage not found.
     this.title=title;
     this.toolbars=[];
     for(var i=0;i<divIds.length;i++){
       this.toolbars[i]=bg.ui.toolbar(divIds[i],title);
       this.toolbars[i].setSeparator("");
-      document.getElementById(divIds[i]).className="gridbar";
+      if(i==0){
+        document.getElementById(divIds[i]).className="gridbar gridbar-top";
+      }else{
+        document.getElementById(divIds[i]).className="gridbar gridbar-bottom";
+      }
       document.getElementById(divIds[i]+"_items").className="gridbar-items";
     }
     this.pageId=function(givenId){
@@ -526,6 +530,7 @@
     }
   }
   });
+
   bg.extend({
     'ui.grid':{
       enableSingleRowSelect : false, //是否每次选择后，仅仅选中当前，其他统统取消
@@ -911,8 +916,12 @@
       var form=this.getForm();
       form.action = this.render_url(method,{"id":ids});
       if(!this.isParamUrl(method)){
-        if(isMulti) bg.form.addInputs(form,this.entity+".id",ids.split(","));
-        else bg.form.addInput(form,this.entity+".id",ids);
+        if(isMulti) {
+          bg.form.removeInputs(form,this.entity+".id");
+          bg.form.addInputs(form,this.entity+".id",ids.split(","));
+        } else {
+          bg.form.addInput(form,this.entity+".id",ids);
+        }
       }
       if(this.page.paramstr){
         bg.form.addHiddens(form,this.page.paramstr);
@@ -952,11 +961,11 @@
       },bg.ui.grid.enableDynaBar?'e1':'ge0');
     }
 
-    this.single = function(methodName,confirmMsg,extparams){
+    this.single = function(methodName,confirmMsg,extparams,ajax){
       return new NamedFunction(methodName,function(){
         var form=selfaction.getForm();
         if(null!=extparams) bg.form.addHiddens(form,extparams);
-        selfaction.submitIdAction(methodName,false,confirmMsg);
+        selfaction.submitIdAction(methodName,false,confirmMsg,ajax);
       },bg.ui.grid.enableDynaBar?'e1':'ge0');
     }
 
@@ -984,7 +993,7 @@
           bg.form.addHiddens(form,selfaction.page.paramstr);
           bg.form.addParamsInput(form,selfaction.page.paramstr);
         }
-        if(ajax && (ajax=="_blank" || ajax=="_new")){
+        if(ajax && ajax=="_blank"){
           bg.form.submit(form,selfaction.render_url(methodName),ajax,null,false);
         }else{
           bg.form.submit(form,selfaction.render_url(methodName),null,null,ajax);
