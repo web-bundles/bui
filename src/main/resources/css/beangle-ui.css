@@ -25,13 +25,13 @@
 
 .grid-caption{background-color: #333333;color: #FFFFFF;margin-bottom: 0;padding: 5px;font-weight: bold;}
 
-.gridempty{border:solid;border-width:1px;border-top-width:0px;border-color:#006CB2;text-align:center;}
+.gridempty{border: 0px solid #006CB2;text-align:center;}
 
-.gridtable {width:100%;border-collapse: collapse;border:solid;border-width:1px 0px 0px 0px;border-color:#006CB2;vertical-align: middle;table-layout:fixed}
+.gridtable {width:100%;border-collapse: collapse;border-style: hidden;vertical-align: middle;table-layout:fixed}
 
-.gridtable td{border-color:#006CB2;border-style:solid;border-width:0 1px 1px 0;overflow:hidden;word-wrap:break-word;text-align:center;}
+.gridtable td{border: 1px solid #006CB2;overflow:hidden;word-wrap:break-word;text-align:center;}
 
-.gridtable th{border-color:#006CB2;border-style:solid;border-width:0 1px 1px 0;text-align:center;}
+.gridtable th{border: 1px solid #006CB2;text-align:center;}
 
 .grid-filter-submit {background-image: url(../icons/16x16/actions/edit-find.png);background-repeat: no-repeat;background-color:transparent;width:16px;height:16px;border-style:none}
 
@@ -68,9 +68,15 @@
 .gridbar{
     height:23px;
     background-color: #c7dbff;
-    border:solid;
-    border-color:#006CB2;
-    border-width:0px;
+    border: 0px solid #006CB2;
+}
+
+.gridbar-top{
+    border-bottom-width:1px;
+}
+
+.gridbar-bottom{
+    border-top-width:1px;
 }
 
 .gridbar-items{float:left;clear:both;}
