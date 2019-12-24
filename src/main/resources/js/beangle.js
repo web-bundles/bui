@@ -857,7 +857,7 @@
           if(value!="")  bg.form.addInput(myForm,key,value,"hidden");
         }
         if(this.target && document.getElementById(this.target)){
-          bg.form.ajaxSubmit(this.formid,this.actionurl,this.target);
+          bg.form.submit(this.formid,this.actionurl,this.target);
         }else{
           myForm.submit();
         }
@@ -915,7 +915,7 @@
             bg.styleCache[cssFile] = true;
         }
     },
-    
+
   });
 
 

@@ -51,6 +51,10 @@
 
 .gridhead-sortable{cursor:pointer;}
 
+.gridhead input[type="text"] {
+    border: thin solid #ccc;
+    height:27px;
+}
 .griddata{}
 
 .griddata-odd{text-decoration: none;letter-spacing:0;background-color: #f9f9f9;}
@@ -203,9 +207,12 @@ table .search-widget .search-item{
     text-align:right;
 }
 
-td .search-item input{
+td .search-item input[type="text"]{
     width:100px;
+    border: thin solid #CCC;
+    height:27px;
 }
+
 td .search-item select{
     width:100px;
 }
@@ -428,6 +435,10 @@ form.listform li.foot {
     padding-left: 110px;
 }
 
+form.listform input[type="text"] {
+    border:thin solid #ccc;
+    height:27px;
+}
 /*
  * Module UI Style
  */
