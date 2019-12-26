@@ -53,8 +53,13 @@
 
 .gridhead input[type="text"] {
     border: thin solid #ccc;
-    height:27px;
+    height:23px;
 }
+
+.gridhead select {
+    height:23px;
+}
+
 .griddata{}
 
 .griddata-odd{text-decoration: none;letter-spacing:0;background-color: #f9f9f9;}
@@ -216,11 +221,12 @@ table .search-widget .search-item{
 td .search-item input[type="text"]{
     width:100px;
     border: thin solid #CCC;
-    height:27px;
+    height:23px;
 }
 
 td .search-item select{
     width:100px;
+    height:23px;
 }
 
 .V {height:1px;font-size:0pt;padding:0px;border-top:1px solid #4791C5;}
@@ -443,7 +449,11 @@ form.listform li.foot {
 
 form.listform input[type="text"] {
     border:thin solid #ccc;
-    height:27px;
+    height:23px;
+}
+
+form.listform select {
+    height:23px;
 }
 /*
  * Module UI Style
