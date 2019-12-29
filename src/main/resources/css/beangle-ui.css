@@ -23,15 +23,15 @@
 /* grid */
 .grid{border-color:#006CB2;margin: 0px 0px 0px 0px ;}
 
-.grid-caption{background-color: #333333;color: #FFFFFF;margin-bottom: 0;padding: 5px;font-weight: bold;}
+.grid-caption{background-color: #222d32;color: #FFFFFF;margin-bottom: 0;padding: 5px;font-weight: bold;}
 
-.gridempty{border-top: 1px solid #006CB2;text-align:center;}
+.gridempty{border-top: 0.5px solid #006CB2;text-align:center;}
 
 .gridtable {width:100%;border-collapse: collapse;border-style: hidden;vertical-align: middle;table-layout:fixed}
 
-.gridtable td{border: 1px solid #006CB2;overflow:hidden;word-wrap:break-word;text-align:center;}
+.gridtable td{border: 0.5px solid #006CB2;overflow:hidden;word-wrap:break-word;text-align:center;}
 
-.gridtable th{border: 1px solid #006CB2;text-align:center;}
+.gridtable th{border: 0.5px solid #006CB2;text-align:center;}
 
 .grid-filter-submit {background-image: url(../icons/16x16/actions/edit-find.png);background-repeat: no-repeat;background-color:transparent;width:16px;height:16px;border-style:none}
 
@@ -77,11 +77,11 @@
 }
 
 .gridbar-top{
-    border-bottom-width:1px;
+    border-bottom-width:0.5px;
 }
 
 .gridbar-bottom{
-    border-top-width:1px;
+    border-top-width:0.5px;
 }
 
 .gridbar-items{float:left;clear:both;}
@@ -286,7 +286,7 @@ table.infoTable {
     background-color: #EEEEEE;
 }
 
-table.infoTable > tbody > td {
+table.infoTable > tbody > tr > td {
     border: 1px solid #FFFFFF;
     overflow:hidden;
     word-wrap:break-word;
@@ -297,7 +297,7 @@ table.infoTable > thead > th {
     height: 22px;
 }
 
-table .infoTable .title{
+table.infoTable td.title{
     height: 22px;
     background-color:#F5EDDB;
     padding-left: 2px;
@@ -305,7 +305,7 @@ table .infoTable .title{
     text-align:right;
 }
 
-table .infoTable .content{
+table.infoTable td.content{
     padding: 0px 1px;
 }
 
@@ -316,7 +316,7 @@ table.infoTitle{
 .indexpanel{
     border-collapse: collapse;
     border:solid;
-    border-width:1px;
+    border-width:0.5px;
     border-color:#006CB2;
     margin:0px 0px 0px 0px;
     width:100%;
@@ -324,7 +324,7 @@ table.infoTitle{
 .index_view{
     border:solid;
     border-width:0px;
-    border-right-width:1px;
+    border-right-width:0.5px;
     border-color:#006CB2;
     vertical-align: top;
     background-color: #E1ECFF;
@@ -338,7 +338,7 @@ table.infoTitle{
 
 .index_title{
     border:solid;
-    border-width:1px;
+    border-width:0.5px;
     margin:0px 0px 0px 0px;
     background-color :#E1ECFF;
     border-color:#006CB2;
