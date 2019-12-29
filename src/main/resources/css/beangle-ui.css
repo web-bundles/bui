@@ -25,7 +25,7 @@
 
 .grid-caption{background-color: #333333;color: #FFFFFF;margin-bottom: 0;padding: 5px;font-weight: bold;}
 
-.gridempty{border: 0px solid #006CB2;text-align:center;}
+.gridempty{border-top: 1px solid #006CB2;text-align:center;}
 
 .gridtable {width:100%;border-collapse: collapse;border-style: hidden;vertical-align: middle;table-layout:fixed}
 
