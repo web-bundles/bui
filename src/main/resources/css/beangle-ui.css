@@ -52,7 +52,7 @@
 .gridhead-sortable{cursor:pointer;}
 
 .gridhead input[type="text"] {
-    border: thin solid #ccc;
+    border: 0.5px solid gray;
     height:23px;
 }
 
@@ -220,7 +220,7 @@ table .search-widget .search-item{
 
 td .search-item input[type="text"]{
     width:100px;
-    border: thin solid #CCC;
+    border: 0.5px solid gray;
     height:23px;
 }
 
@@ -448,7 +448,7 @@ form.listform li.foot {
 }
 
 form.listform input[type="text"] {
-    border:thin solid #ccc;
+    border: 0.5px solid gray;
     height:23px;
 }
 
