@@ -879,7 +879,7 @@
          alert("Cannot support unknow urlrender "+style);
        }
     }
-    
+
     this.render_url = function(method,params){
       return this.urlRender.render(this.page.actionurl,method,params);
     };
@@ -1033,17 +1033,17 @@
       // base should ends with /
       if(module=="validity"){
         bg.requireCss("css/jquery.validity.css",base);
-        bg.require("js/plugins/jquery-validity.js",callback,base);
+        bg.require("js/plugins/jquery-validity.js",base,callback);
       }else if(module=="tabletree"){
         bg.requireCss("css/beangle-ui-tabletree.css",beangle.base);
-        bg.require("js/beangle-ui-tabletree.js",callback,beangle.base);
+        bg.require("js/beangle-ui-tabletree.js",beangle.base,callback);
       }else if(module=="colorbox"){
         bg.requireCss("css/colorbox.css",base);
-        bg.require("js/plugins/jquery-colorbox.min.js",callback,base);
+        bg.require("js/plugins/jquery-colorbox.min.js",base,callback);
       }else if(module=="jquery.pstrength"){
         bg.requireCss("css/jquery-pstrength.css",base);
-        bg.require("js/plugins/jquery-pstrength.js",callback,base);
-        bg.require("js/plugins/jquery-pstrength_zh.js",callback,base);
+        bg.require("js/plugins/jquery-pstrength.js",base,callback);
+        bg.require("js/plugins/jquery-pstrength_zh.js",base,callback);
       }
     }
   });
