@@ -884,22 +884,22 @@
   bg.extend({
     scriptCache:{},
     styleCache:{},
-    require : function(file, callBack, basePath) {
+    require : function(file, basePath, callBack) {
         var self = this, successFunction, path;
         successFunction = callBack || function() {
         };
-        path = basePath || null;
-        if (!bg.scriptCache[file]) {
+        path = (basePath || "") + file;
+        if (!bg.scriptCache[path]) {
             $.ajax( {
             type :"GET",
             scriptCharset:"UTF-8",
-            url :path + file,
+            url :path,
             success :successFunction,
             dataType :"script",
             cache :true,
             async :false
             });
-            bg.scriptCache[file] = true;
+            bg.scriptCache[path] = true;
         }else{
           successFunction();
         }
@@ -907,21 +907,18 @@
 
     /** Load required CSS Files */
     requireCss : function(cssFile, basePath) {
-        if (!bg.styleCache[cssFile]) {
-            var path, cssref;
-            path = basePath || null;
-            cssref = document.createElement("link");
-            cssref.setAttribute("rel", "stylesheet");
-            cssref.setAttribute("type", "text/css");
-            cssref.setAttribute("href", (path + cssFile));
-            document.getElementsByTagName("head")[0].appendChild(cssref);
-            bg.styleCache[cssFile] = true;
+        var path = (basePath || "") + cssFile;
+        if (!bg.styleCache[path]) {
+            var link = document.createElement("link");
+            link.setAttribute("rel", "stylesheet");
+            link.setAttribute("type", "text/css");
+            link.setAttribute("href", path);
+            document.getElementsByTagName("head")[0].appendChild(link);
+            bg.styleCache[path] = true;
         }
-    },
+    }
 
   });
-
-
 
   beangle.ready(beangle.iframe.adaptSelf);
   if(beangle.ajaxhistory)beangle.history.init();
