@@ -884,7 +884,43 @@
   bg.extend({
     scriptCache:{},
     styleCache:{},
-    require : function(file, basePath, callBack) {
+    modules:{},
+    register:function(base,modules){
+      beangle.base=base;
+      bg.modules=modules;
+      var paths= {};
+      for(var m in modules){
+        beangle.modules[m]=modules[m];
+      }
+      for(var m in beangle.modules){
+        var bm=beangle.modules[m]
+        if(bm.js){
+          paths[m]=bm.js.substring(0,bm.js.length-3);
+        }
+      }
+      require.config({
+　　　　  baseUrl: base,
+　　　　  paths: paths
+　　   });
+    },
+    load:function(names,callBack){
+      var requireModules=[]
+      for(var i=0;i<names.length;i++){
+        var module= bg.modules[names[i]];
+        if(module){
+          if(module.css){
+            for(var i=0;i<module.css.length;i++){
+              bg.requireCss(module.css[i],beangle.base);
+            }
+          }
+          if(module.js){
+            requireModules.push(names[i])
+          }
+        }
+      }
+      require(requireModules,callBack)
+    },
+    require : function(file, basePath, callBack) {//deprected,issuring multi downloading for same resource when occur more time in one page.
         var self = this, successFunction, path;
         successFunction = callBack || function() {
         };
