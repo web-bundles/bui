@@ -1,7 +1,7 @@
 /**
  * Beangle, Agile Java/Scala Development Scaffold and Toolkit
  *
- * Copyright (c) 2005-2017, Beangle Software.
+ * Copyright (c) 2005-2020, Beangle Software.
  *
  * Beangle is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -47,7 +47,7 @@
     this.id=divId;
     this.separator="&nbsp;";
     this.bar.className="toolbar notprint";
-    var imagePath=bg.base + "icons/16x16/actions/";
+    var imagePath=beangle.base + "bui/"+beangle.version+"/icons/16x16/actions/";
 
     this.setTitle=function(newTitle,imageName){
       if(!newTitle) return;
@@ -1026,4 +1026,14 @@
     }
   }
   });
+
+  //register as a module
+  if ( typeof module === "object" && module && typeof module.exports === "object" ) {
+    module.exports = beangle.ui;
+  } else {
+    if ( typeof define === "function" && define.amd ) {
+      window.bui=beangle.ui;
+      define( "bui", [], function () { return beangle.ui; } );
+    }
+  }
 })(beangle);

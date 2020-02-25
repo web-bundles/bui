@@ -1,7 +1,7 @@
 /**
  * Beangle, Agile Java/Scala Development Scaffold and Toolkit
  *
- * Copyright (c) 2005-2017, Beangle Software.
+ * Copyright (c) 2005-2020, Beangle Software.
  *
  * Beangle is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,6 +22,7 @@
     return true;
   };
 
+  beangle.version="0.2.0";
   /** extend function */
   beangle.extend= function(map){
     for(attr in map){
@@ -33,9 +34,6 @@
       obj[attrs[attrs.length-1]]=map[attr];
     }
   }
-  window.beangle=beangle;
-  window.bg=beangle;
-
   beangle.base=null;
 
   beangle.ajaxhistory=(typeof History!="undefined" && typeof History.Adapter !="undefined");
@@ -89,8 +87,8 @@
                     try{
                       jQuery(currState.data.container).html(currState.data.content);
                     }catch(e){alert(e)}
-                    bg.history.applyState(currState);
-                    if(History.savedStates.length>bg.history.maxStates)History.reset();
+                    beangle.history.applyState(currState);
+                    if(History.savedStates.length>beangle.history.maxStates)History.reset();
                 }
             });
         });
@@ -103,7 +101,7 @@
         complete: function( jqXHR) {
           target="#"+target;
           if(jQuery(target).html().length>0){
-            bg.history.snapshot();
+            beangle.history.snapshot();
             History.pushState({content:jqXHR.responseText,container:target},"",url);
           }else{
             var state=History.getState();
@@ -145,21 +143,23 @@
         if(jQuery.type(target)=="string" && target.indexOf("#")!=0){
           target = "#" + target;
         }
-        bg.displayAjaxMessage();
+        beangle.displayAjaxMessage();
 
-        jQuery(form).ajaxForm({
-          success:function(result)  {
-            bg.history.snapshot();
-            History.pushState({content:result,container:target},"",action);
-            bg.hideAjaxMessage();
-            return false;},
-          error:function (response)  {
-            try{jQuery(target).html(response.responseText);}catch(e){alert(e)}
-            bg.hideAjaxMessage();
-            return false;},
-          url:action
+        require(["jquery-form"],function(){
+          jQuery(form).ajaxForm({
+            success:function(result)  {
+              beangle.history.snapshot();
+              History.pushState({content:result,container:target},"",action);
+              beangle.hideAjaxMessage();
+              return false;},
+            error:function (response)  {
+              try{jQuery(target).html(response.responseText);}catch(e){alert(e)}
+              beangle.hideAjaxMessage();
+              return false;},
+            url:action
+          });
+          jQuery(form).submit();
        });
-       jQuery(form).submit();
     }
   };
 
@@ -171,7 +171,7 @@
       if(typeof obj =="object" && obj.tagName.toLowerCase()=="a"){
         url=obj.href;
         if(!target){
-          target=bg.findTarget(obj);
+          target=beangle.findTarget(obj);
         }
       }
       if(!target) target="_self";
@@ -180,7 +180,7 @@
       else if("_top" ==target){self.top.location=url;}
       else if("_blank" ==target  ){window.open(url);}
       else{
-        if(!bg.isAjaxTarget(target)){
+        if(!beangle.isAjaxTarget(target)){
           //FIXME _blank,_top
           document.getElementById(target).src=url;
         }else{
@@ -243,7 +243,7 @@
       }
     }
   });
-  bg.extend({
+  beangle.extend({
     randomInt:function(){
       var num=Math.random()*10000000;
       num -= num%1;
@@ -279,7 +279,7 @@
       },
       /**获得事件背后的元素*/
       getTarget: function (e){
-        e=bg.event.portable(e);
+        e=beangle.event.portable(e);
         return e.target || e.srcElement;
       }
     }
@@ -289,14 +289,14 @@
   beangle.extend({
     input:{
       toggleCheckBox : function (chk,event){
-        bg.input.boxAction(chk, "toggle",event);
+        beangle.input.boxAction(chk, "toggle",event);
       },
       /**
        * 返回单选列表中选择的值
        * @return 没有选中时,返回""
        */
       getRadioValue : function (radioName){
-        return bg.input.boxAction(document.getElementsByName(radioName), "value");
+        return beangle.input.boxAction(document.getElementsByName(radioName), "value");
       },
 
       /**
@@ -304,7 +304,7 @@
        * @return 多个值以,相隔.没有选中时,返回""
        */
       getCheckBoxValues : function (chkname){
-        var tmpIds= bg.input.boxAction(document.getElementsByName(chkname), "value");
+        var tmpIds= beangle.input.boxAction(document.getElementsByName(chkname), "value");
         if(tmpIds==null)return "";
         else return tmpIds;
       },
@@ -365,7 +365,7 @@
   beangle.extend({
     iframe:{
       adaptSelf:function (){
-        bg.iframe.adapt(self);
+        beangle.iframe.adapt(self);
       },
       /** iframe 页面自适应大小
        * @targObj    iframe
@@ -390,10 +390,10 @@
           }
           if((totalHeight>0) &&  totalHeight> myHeight){
             targWin.style.height = totalHeight+"px";
-            bg.logger.debug('adapt frame:'+targObj.name+" height "+targWin.style.height);
+            beangle.logger.debug('adapt frame:'+targObj.name+" height "+targWin.style.height);
           }
         }
-        bg.iframe.adapt(targObj.parent);
+        beangle.iframe.adapt(targObj.parent);
       }
     }
   });
@@ -427,13 +427,13 @@
         //3. check target and action
         submitTarget = (null!=target)?target:myForm.target;
 
-        if(!submitTarget) submitTarget=bg.findTarget(myForm);
+        if(!submitTarget) submitTarget=beangle.findTarget(myForm);
 
         if(action==null) action=myForm.action;
 
         if(action.indexOf("http://")==0) action=action.substring(action.indexOf("/",7));
 
-        if(null==ajax || ajax) ajax=bg.isAjaxTarget(submitTarget);
+        if(null==ajax || ajax) ajax=beangle.isAjaxTarget(submitTarget);
 
         // 4. fire
         if(ajax){
@@ -449,7 +449,7 @@
           origin_target=myForm.target;
           origin_action=myForm.action;
           myForm.action=action;
-          myForm.target = bg.normalTarget(submitTarget);
+          myForm.target = beangle.normalTarget(submitTarget);
           myForm.submit();
           myForm.target = origin_target;
           myForm.action = origin_action;
@@ -457,12 +457,14 @@
       },
       ajaxSubmit : function(formId,action,target){
         if(!action) action=document.getElementById(formId).action;
-        jQuery('#'+formId).ajaxForm({
-          success:function(result) {try{jQuery('#'+target).html(result);}catch(e){alert(e)}},
-          error:function (response) {try{jQuery('#'+target).html(response.responseText);}catch(e){alert(e)}},
-          url:action
+        require(["jquery-form"],function(){
+          jQuery('#'+formId).ajaxForm({
+            success:function(result) {try{jQuery('#'+target).html(result);}catch(e){alert(e)}},
+            error:function (response) {try{jQuery('#'+target).html(response.responseText);}catch(e){alert(e)}},
+            url:action
+          });
+          jQuery('#'+formId).submit();
         });
-        jQuery('#'+formId).submit();
       },
       /**
        * 提交要求含有id的表单
@@ -472,7 +474,7 @@
        * @param action (可选) 指定form的action
        */
       submitId : function (form,id,isMulti,action,promptMsg,ajax){
-        var selectId = bg.input.getCheckBoxValues(id);
+        var selectId = beangle.input.getCheckBoxValues(id);
         if(null==isMulti) isMulti=false;
 
         if(""==selectId){
@@ -488,11 +490,11 @@
         }else{
           action=form.action;
         }
-        bg.form.addInput(form,(isMulti?(id+'s'):id),selectId,"hidden");
+        beangle.form.addInput(form,(isMulti?(id+'s'):id),selectId,"hidden");
         if(null!=promptMsg){
           if(!confirm(promptMsg))return;
         }
-        bg.form.submit(form,action,null,null,ajax);
+        beangle.form.submit(form,action,null,null,ajax);
       },
       /**
        * 向form中添加一个input。
@@ -548,31 +550,31 @@
        * 将其作为一个参数加入到to表单中。
        */
       setSearchParams : function (from,to,prefix){
-        bg.form.addInput(to,'params',"");
-        var params=bg.form.getInputParams(from,prefix,false);
-        bg.form.addInput(to,'params',params);
+        beangle.form.addInput(to,'params',"");
+        var params=beangle.form.getInputParams(from,prefix,false);
+        beangle.form.addInput(to,'params',params);
       },
 
       addHiddens : function (form,paramSeq){
-        bg.assert.notNull(paramSeq,"paramSeq for addHiddens must not be null");
+        beangle.assert.notNull(paramSeq,"paramSeq for addHiddens must not be null");
         var params = paramSeq.split("&"), i, name, value;
         for(i=0;i<params.length;i++){
           if(params[i]!=""){
             name = params[i].substr(0,params[i].indexOf("="));
             value =params[i].substr(params[i].indexOf("=")+1);
-            bg.form.addInput(form,name,value,"hidden");
+            beangle.form.addInput(form,name,value,"hidden");
           }
         }
       },
 
       addParamsInput : function (form,value){
-        bg.form.addInput(form,"_params",value,"hidden");
+        beangle.form.addInput(form,"_params",value,"hidden");
       },
       transferParams : function (from ,to,prefix,getEmpty){
         if(getEmpty==null)
           getEmpty=true;
-        var params = bg.form.getInputParams(from,prefix,getEmpty);
-        bg.form.addHiddens(to,params);
+        var params = beangle.form.getInputParams(from,prefix,getEmpty);
+        beangle.form.addHiddens(to,params);
       },
 
       /**
@@ -626,29 +628,29 @@
             alert("输入分页的页码是:"+pageIndex+",它不是个整数");
             return;
           }
-          bg.form.addInput(form,"pageIndex",pageIndex,"hidden");
+          beangle.form.addInput(form,"pageIndex",pageIndex,"hidden");
         }else{
-          bg.form.addInput(form,"pageIndex",1,"hidden");
+          beangle.form.addInput(form,"pageIndex",1,"hidden");
         }
         if(null!=pageSize){
           if(!/^[1-9]\d*$/.test(pageSize)){
             alert("输入分页的页长是:"+pageSize+",它不是个整数");
             return;
           }
-          bg.form.addInput(form,"pageSize",pageSize,"hidden");
+          beangle.form.addInput(form,"pageSize",pageSize,"hidden");
         }else{
-          bg.form.addInput(form,"pageSize","","hidden");
+          beangle.form.addInput(form,"pageSize","","hidden");
         }
         if(null!=orderBy&&orderBy!="null"){
-          bg.form.addInput(form,"orderBy",orderBy,"hidden");
+          beangle.form.addInput(form,"orderBy",orderBy,"hidden");
         }else{
-          bg.form.addInput(form,"orderBy","","hidden");
+          beangle.form.addInput(form,"orderBy","","hidden");
         }
         //alert("in goToPage");
         form.submit();
       },
       goToFirstPage : function (form){
-        bg.form.goToPage(form,1);
+        beangle.form.goToPage(form,1);
       }
     }
   });
@@ -689,13 +691,13 @@
         for (i = 0; i < srcSelect.length; i++){
           if (srcSelect.options[i].selected){
             op = srcSelect.options[i];
-            if (!bg.select.hasOption(destSelect, op)){
+            if (!beangle.select.hasOption(destSelect, op)){
                destSelect.options[destSelect.length]= new Option(op.text, op.value);
             }
            }
         }
-        bg.select.removeSelected(srcSelect);
-        bg.select.clearStatus(srcSelect);
+        beangle.select.removeSelected(srcSelect);
+        beangle.select.clearStatus(srcSelect);
       },
 
       clearStatus : function (select){
@@ -757,7 +759,7 @@
   });
   // Page---------------------------------------------------------------------
   function Page(action,target,pageIndex,pageSize,totalItems){
-    this.formid = "form_" + bg.randomInt();
+    this.formid = "form_" + beangle.randomInt();
     this.actionurl=action;
     this.target=target;
     this.paramMap={};
@@ -792,7 +794,7 @@
       if(givenTarget){
         this.target=givenTarget;
       }else if(elemId){
-        this.target=bg.findTarget(document.getElementById(elemId));
+        this.target=beangle.findTarget(document.getElementById(elemId));
       }
       return this;
     }
@@ -813,7 +815,7 @@
       return myForm;
     }
     this.addParams = function(paramSeq){
-      bg.assert.notNull(paramSeq,"paramSeq for addHiddens must not be null");
+      beangle.assert.notNull(paramSeq,"paramSeq for addHiddens must not be null");
       this.paramstr=paramSeq;
       var paramArray = paramSeq.split("&"), i, name, value;
       for(i=0;i<paramArray.length;i++){
@@ -830,7 +832,7 @@
     this.checkPageParams = function (pageIndex, pageSize,orderBy){
       if(null!=pageIndex){
         if(!/^[1-9]\d*$/.test(pageIndex)){
-          bg.alert("输入分页的页码是:"+pageIndex+",它不是个整数");
+          beangle.alert("输入分页的页码是:"+pageIndex+",它不是个整数");
           return false;
         }
         if(this.totalPages!=null){
@@ -842,7 +844,7 @@
       }
       if(null!=pageSize){
         if(!/^[1-9]\d*$/.test(pageSize)){
-          bg.alert("输入分页的页长是:"+pageSize+",它不是个整数");
+          beangle.alert("输入分页的页长是:"+pageSize+",它不是个整数");
           return false;
         }
         this.paramMap["pageSize"]=pageSize;
@@ -857,10 +859,10 @@
       if(this.checkPageParams(pageIndex,pageSize,orderBy)){
         for(key in this.paramMap){
           value=this.paramMap[key];
-          if(value!="")  bg.form.addInput(myForm,key,value,"hidden");
+          if(value!="")  beangle.form.addInput(myForm,key,value,"hidden");
         }
         if(this.target && document.getElementById(this.target)){
-          bg.form.submit(this.formid,this.actionurl,this.target);
+          beangle.form.submit(this.formid,this.actionurl,this.target);
         }else{
           myForm.submit();
         }
@@ -868,11 +870,11 @@
     }
   }
 
-  bg.extend({
+  beangle.extend({
     page:function (action,target){return new Page(action,target);}
   });
 
-  bg.onReturn = function(event, action) {
+  beangle.onReturn = function(event, action) {
     if (!event) {
       event = window.event;
     }
@@ -881,36 +883,43 @@
     }
   };
 
-  bg.extend({
-    scriptCache:{},
+  beangle.extend({
     styleCache:{},
     modules:{},
     register:function(base,modules){
-      beangle.base=base;
-      bg.modules=modules;
-      var paths= {};
-      for(var m in modules){
-        beangle.modules[m]=modules[m];
+      if(!beangle.base){
+        beangle.base=base;
       }
-      for(var m in beangle.modules){
-        var bm=beangle.modules[m]
-        if(bm.js){
-          paths[m]=bm.js.substring(0,bm.js.length-3);
+      var registed=false;
+      for(var m in modules){
+        if(!beangle.modules[m]){
+          beangle.modules[m]=modules[m];
+          registed=true;
         }
       }
-      require.config({
-　　　　  baseUrl: base,
-　　　　  paths: paths
-　　   });
+      if(registed){
+        var paths= {};
+        var shim={}
+        for(var m in beangle.modules){
+          var bm=beangle.modules[m]
+          if(bm.js){
+            paths[m]=bm.js.substring(0,bm.js.length-3);
+            if(bm.deps){
+              shim[m]=bm.deps
+            }
+          }
+        }
+        require.config({baseUrl: base,paths: paths,shim:shim});
+      }
     },
     load:function(names,callBack){
       var requireModules=[]
       for(var i=0;i<names.length;i++){
-        var module= bg.modules[names[i]];
+        var module= beangle.modules[names[i]];
         if(module){
           if(module.css){
-            for(var i=0;i<module.css.length;i++){
-              bg.requireCss(module.css[i],beangle.base);
+            for(var j=0;j<module.css.length;j++){
+              beangle.requireCss(module.css[j],beangle.base);
             }
           }
           if(module.js){
@@ -918,39 +927,37 @@
           }
         }
       }
-      require(requireModules,callBack)
-    },
-    require : function(file, basePath, callBack) {//deprected,issuring multi downloading for same resource when occur more time in one page.
-        var self = this, successFunction, path;
-        successFunction = callBack || function() {
-        };
-        path = (basePath || "") + file;
-        if (!bg.scriptCache[path]) {
-            $.ajax( {
-            type :"GET",
-            scriptCharset:"UTF-8",
-            url :path,
-            success :successFunction,
-            dataType :"script",
-            cache :true,
-            async :false
-            });
-            bg.scriptCache[path] = true;
-        }else{
-          successFunction();
+      if(requireModules.length>0){
+        require(requireModules,callBack)
+      }else if(callBack){
+        try{
+          callBack();
+        }catch(e){
         }
+      }
+    },
+    require : function(urls, callBack) {
+      if(arguments.length==3){
+         require([arguments[0]],arguments[2]);
+      }else{
+        if(typeof urls ==="string"){
+          require([urls],callBack);
+        }else{
+          require(urls,callBack);
+        }
+      }
     },
 
     /** Load required CSS Files */
     requireCss : function(cssFile, basePath) {
         var path = (basePath || "") + cssFile;
-        if (!bg.styleCache[path]) {
+        if (!beangle.styleCache[path]) {
             var link = document.createElement("link");
             link.setAttribute("rel", "stylesheet");
             link.setAttribute("type", "text/css");
             link.setAttribute("href", path);
             document.getElementsByTagName("head")[0].appendChild(link);
-            bg.styleCache[path] = true;
+            beangle.styleCache[path] = true;
         }
     }
 
@@ -958,6 +965,17 @@
 
   beangle.ready(beangle.iframe.adaptSelf);
   if(beangle.ajaxhistory)beangle.history.init();
+
+  //register as a module
+  if ( typeof module === "object" && module && typeof module.exports === "object" ) {
+    module.exports = beangle;
+  } else {
+    window.beangle=beangle;
+    window.bg=beangle;
+    if ( typeof define === "function" && define.amd ) {
+      define( "beangle", [], function () { return beangle; } );
+    }
+  }
 })(window);
 
 // fix jquery ready bug
