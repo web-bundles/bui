@@ -434,12 +434,12 @@ form.listform li.foot {
 form.listform li > input[type="text"],input[type="password"],input[type="number"] {
     border: 0.5px solid gray;
     height:23px;
-    min-width:200px;
+    width:200px;
 }
 
 form.listform li > select {
     height:23px;
-    min-width:200px;
+    width:200px;
 }
 /*
  * Module UI Style
