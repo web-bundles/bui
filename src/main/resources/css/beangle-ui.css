@@ -523,8 +523,8 @@ form.listform select {
 /*
  * patches
  */
-.nav-tabs > li > a {
-    padding: 5px 15px;
+.nav-tabs-compact > li > a{
+  padding: 5px 15px !important;
 }
 
 .chosen-container{
