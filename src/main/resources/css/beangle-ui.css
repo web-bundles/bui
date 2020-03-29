@@ -381,7 +381,8 @@ form.listform {
     font-size: 12px;
     line-height: normal;
 }
-form.listform label.title{
+
+form.listform li > label.title{
     clear: left;
     float: left;
     display: block;
@@ -395,6 +396,7 @@ form.listform label.title{
 form.listform label.comment{
     padding-left: 5px;
 }
+
 form.listform em{
     color: #FF0000;
     font-style: normal;
@@ -403,7 +405,7 @@ form.listform em{
 
 form.listform legend {
     font-weight: bold;
-    padding: 0 2px;
+    padding: 0 0 5px;
     margin: 0px 0px;
     font-size: inherit;
 }
@@ -413,47 +415,31 @@ form.listform fieldset{
     margin: 0px 0px;
 }
 
-form.listform fieldset ol {
+form.listform fieldset > ol {
     margin: 0;
     padding: 0;
 }
 
-form.listform fieldset li{
+form.listform fieldset > ol > li{
     background: url("../images/form-divider.gif") repeat-x scroll left bottom transparent;
     padding: 4px 10px 7px;
     list-style: none outside none;
     margin: 0;
 }
 
-form.listform fieldset fieldset {
-    border: medium none;
-    margin: 3px 0 0;
-    background: none repeat scroll 0 0 transparent;
-}
-form.listform fieldset fieldset legend {
-    font-weight: normal;
-    padding: 0 0 5px;
-}
-
-form.listform fieldset fieldset label {
-    display: block;
-    width: auto;
-}
-form.listform fieldset fieldset label {
-    margin-left: 103px;
-}
-
 form.listform li.foot {
     padding-left: 110px;
 }
 
-form.listform input[type="text"] {
+form.listform li > input[type="text"],input[type="password"],input[type="number"] {
     border: 0.5px solid gray;
     height:23px;
+    width:200px;
 }
 
-form.listform select {
+form.listform li > select {
     height:23px;
+    width:200px;
 }
 /*
  * Module UI Style
@@ -523,8 +509,8 @@ form.listform select {
 /*
  * patches
  */
-.nav-tabs > li > a {
-    padding: 5px 15px;
+.nav-tabs-compact > li > a{
+  padding: 5px 15px !important;
 }
 
 .chosen-container{
