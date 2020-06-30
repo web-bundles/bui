@@ -229,6 +229,10 @@ td .search-item select{
     height:23px;
 }
 
+td > label {
+  font-weight:inherit;
+}
+
 .V {height:1px;font-size:0pt;padding:0px;border-top:1px solid #4791C5;}
 
 /* FormTable */

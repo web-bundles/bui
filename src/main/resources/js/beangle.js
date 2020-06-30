@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version="0.2.1";
+  beangle.version="0.2.2";
   /** extend function */
   beangle.extend= function(map){
     for(attr in map){
@@ -48,7 +48,6 @@
         mz.style.zIndex = "1040";
         mz.style.top = "0px";
         mz.style.right = "0px";
-        mz.style.width = "55px";
         mz.style.height = "20px"
         mz.style.background = "#F9EDBE";
         mz.style.padding = "2px";
@@ -57,12 +56,12 @@
         mz.appendChild(text);
     }else {
         mz.innerHTML=loadingMessage;
-        mz.style.visibility = 'visible';
+        mz.style.display = 'block';
     }
   };
   beangle.hideAjaxMessage=function(){
       var mz = document.getElementById('messageZone');
-      if(mz)mz.style.visibility='hidden';
+      if(mz)mz.style.display='none';
   };
 
   //History--------------------------
@@ -880,6 +879,36 @@
     }
     if (event && event.keyCode && event.keyCode == 13) {
       action();
+    }
+  };
+
+  beangle.getCookie = function(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  };
+
+  beangle.createCookie =function(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/;SameSite=Strict";
+  };
+
+  beangle.deleteCookie =function(name, path, domain ) {
+    if( getCookie( name ) ) {
+      document.cookie = name + "=" +
+        ((path) ? ";path="+path:"")+
+        ((domain)?";domain="+domain:"") +
+        ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
     }
   };
 
