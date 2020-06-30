@@ -229,9 +229,6 @@ td .search-item select{
     height:23px;
 }
 
-td > label {
-  font-weight:inherit;
-}
 
 .V {height:1px;font-size:0pt;padding:0px;border-top:1px solid #4791C5;}
 
@@ -381,12 +378,14 @@ table.settingTable td{
  * Pretty List Form Style
  */
 
-form.listform {
+fieldset .listset {
     font-size: 12px;
     line-height: normal;
+    border-style: solid none none;
+    margin: 0px 0px;
 }
 
-form.listform li > label.title{
+fieldset.listset li > label.title{
     clear: left;
     float: left;
     display: block;
@@ -397,51 +396,47 @@ form.listform li > label.title{
     font-weight: bold;
 }
 
-form.listform label.comment{
+fieldset.listset label.comment{
     padding-left: 5px;
 }
 
-form.listform em{
+fieldset.listset em{
     color: #FF0000;
     font-style: normal;
     font-weight: bold;
 }
 
-form.listform legend {
+fieldset.listset legend {
     font-weight: bold;
     padding: 0 0 5px;
     margin: 0px 0px;
     font-size: inherit;
 }
 
-form.listform fieldset{
-    border-style: solid none none;
-    margin: 0px 0px;
-}
 
-form.listform fieldset > ol {
+fieldset.listset > ol {
     margin: 0;
     padding: 0;
 }
 
-form.listform fieldset > ol > li{
+fieldset.listset > ol > li{
     background: url("../images/form-divider.gif") repeat-x scroll left bottom transparent;
     padding: 4px 10px 7px;
     list-style: none outside none;
     margin: 0;
 }
 
-form.listform li.foot {
+fieldset.listset li.foot {
     padding-left: 110px;
 }
 
-form.listform li > input[type="text"],input[type="password"],input[type="number"] {
+fieldset.listset li > input[type="text"],input[type="password"],input[type="number"] {
     border: 0.5px solid gray;
     height:23px;
     width:200px;
 }
 
-form.listform li > select {
+fieldset.listset li > select {
     height:23px;
     width:200px;
 }
