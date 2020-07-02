@@ -406,21 +406,21 @@
         //1.native onsubmit
         if(myForm.onsubmit){
           rs=null;
-          try{rs=myForm.onsubmit();}catch(e){alert(e);return;}
+          try{rs=myForm.onsubmit();}catch(e){alert(e);return false;}
           if(!rs){
-            return;
+            return false;
           }
         }
         //2. submit hook
         if(onsubmit){
           rs=null;
           if(typeof onsubmit == "function"){
-            try{rs=onsubmit(myForm);}catch(e){alert(e);return;}
+            try{rs=onsubmit(myForm);}catch(e){alert(e);return false;}
           }else{
             rs=eval(onsubmit);
           }
           if(!rs){
-            return;
+            return false;
           }
         }
         //3. check target and action
@@ -453,6 +453,7 @@
           myForm.target = origin_target;
           myForm.action = origin_action;
         }
+        return true;
       },
       ajaxSubmit : function(formId,action,target){
         if(!action) action=document.getElementById(formId).action;

@@ -20,8 +20,13 @@
  * Beangle UI CSS Framework
  * LGPL version 3.
  */
+
+.text-mini{
+  font-size:0.8125rem !important;
+}
+
 /* grid */
-.grid{border-color:#006CB2;margin: 0px 0px 0px 0px ;}
+.grid{border-color:#006CB2;margin: 0px 0px 0px 0px ;font-size:0.8125rem !important;}
 
 .grid-caption{background-color: #222d32;color: #FFFFFF;margin-bottom: 0;padding: 5px;font-weight: bold;}
 
@@ -53,11 +58,11 @@
 
 .gridhead input[type="text"] {
     border: 0.5px solid gray;
-    height:23px;
+    height:1.4375rem;
 }
 
 .gridhead select {
-    height:23px;
+    height:1.4375rem;
 }
 
 .griddata{}
@@ -71,9 +76,10 @@
 .griddata-over{background-color: #BFFFBF;}
 
 .gridbar{
-    height:23px;
+    height:1.4375rem;
     background-color: #c7dbff;
     border: 0px solid #006CB2;
+    font-size:0.8125rem !important;
 }
 
 .gridbar-top{
@@ -99,7 +105,12 @@
 .pgbar-go{width:30px;height:18px;font-size: 0.8em;text-align:center;margin:0px;padding:0px 0px 2px 0px;border:solid;border-width:1px;border-color:#006CB2;display:none;}
 
 /*toolbar*/
-.toolbar{height:23px;border-collapse:separate;display:block;}
+.toolbar{
+  height:1.4375rem;
+  border-collapse:separate;
+  display:block;
+  font-size:0.8125rem !important;
+}
 
 .toolbar-icon{
     background-image: url(../icons/16x16/actions.png);
@@ -199,34 +210,35 @@ div.message img.icon {
     vertical-align: middle;
 }
 
-table .search-widget{
+table.search-widget{
     border-collapse: collapse;
     border-width:0px;
     margin:auto;
     width:100%;
+    font-size:0.8125rem !important;
 }
 
-table .search-widget label{
+table.search-widget label{
     font-weight: normal;
     margin:0px 0px;
 }
-table .search-widget tbody> tr > td{
+table.search-widget tbody> tr > td{
     padding:1px;
 }
 
-table .search-widget .search-item{
+table.search-widget .search-item{
     text-align:right;
 }
 
-td .search-item input[type="text"]{
+td.search-item input[type="text"]{
     width:100px;
     border: 0.5px solid gray;
-    height:23px;
+    height:1.4375rem;
 }
 
-td .search-item select{
+td.search-item select{
     width:100px;
-    height:23px;
+    height:1.4375rem;
 }
 
 
@@ -374,12 +386,12 @@ table.settingTable td{
 .ui-disabled{
     color:#999999;
 }
+
 /*
  * Pretty List Form Style
  */
-
-fieldset .listset {
-    font-size: 12px;
+fieldset.listset {
+    font-size: .8125rem !important;
     line-height: normal;
     border-style: solid none none;
     margin: 0px 0px;
@@ -432,12 +444,12 @@ fieldset.listset li.foot {
 
 fieldset.listset li > input[type="text"],input[type="password"],input[type="number"] {
     border: 0.5px solid gray;
-    height:23px;
+    height:1.4375rem;
     width:200px;
 }
 
 fieldset.listset li > select {
-    height:23px;
+    height:1.4375rem;
     width:200px;
 }
 /*
