@@ -406,7 +406,7 @@ fieldset.listset li > label.title{
     margin: 0 0 8px;
     padding-right: 5px;
     text-align: right;
-    width: 100px;
+    min-width: 100px;
     font-weight: bold;
 }
 
@@ -425,6 +425,7 @@ fieldset.listset legend {
     padding: 0 0 5px;
     margin: 0px 0px;
     font-size: inherit;
+    background: url("../images/form-divider.gif") repeat-x scroll left bottom transparent;
 }
 
 
