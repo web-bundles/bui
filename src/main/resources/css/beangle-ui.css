@@ -233,12 +233,13 @@ table.search-widget .search-item{
 td.search-item input[type="text"]{
     width:100px;
     border: 0.5px solid gray;
-    height:1.4375rem;
+    height:1.5625rem;
 }
 
 td.search-item select{
     width:100px;
-    height:1.4375rem;
+    height:1.5625rem;
+    font-size:0.75rem !important;
 }
 
 
@@ -389,6 +390,7 @@ table.settingTable td{
 
 /*
  * Pretty List Form Style
+ * 1.5625rem=25px height
  */
 fieldset.listset {
     font-size: .8125rem !important;
@@ -444,13 +446,14 @@ fieldset.listset li.foot {
 
 fieldset.listset li > input[type="text"],input[type="password"],input[type="number"] {
     border: 0.5px solid gray;
-    height:1.4375rem;
+    height:1.5625rem;
     width:200px;
 }
 
 fieldset.listset li > select {
-    height:1.4375rem;
+    height:1.5625rem;
     width:200px;
+    font-size:0.75rem !important;
 }
 /*
  * Module UI Style
