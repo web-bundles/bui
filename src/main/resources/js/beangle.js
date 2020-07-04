@@ -913,6 +913,29 @@
     }
   };
 
+  beangle.displayFileInfo=function(domId,file,maxSize){
+    var maxStr="";
+    if(maxSize >= 1024*1024){
+      maxStr = (maxSize/1024.0/1024.0).toFixed(1)+'MB';
+    }else{
+      maxStr = (maxSize/1024.0).toFixed(1)+'KB';
+    }
+    jQuery('#'+domId).attr("title","最大"+maxStr);
+    var sizeStr="";
+    if(file.size >= 1024*1024){
+      sizeStr = (file.size/1024.0/1024.0).toFixed(1)+'MB';
+    }else{
+      sizeStr = (file.size/1024.0).toFixed(1)+'KB';
+    }
+    if(file.size > maxSize){
+      jQuery('#'+domId).css('color','red');
+      jQuery('#'+domId).html("大小"+sizeStr+",超过"+maxStr);
+    }else{
+      jQuery('#'+domId).css('color','black');
+      jQuery('#'+domId).html("大小"+sizeStr+",最大"+maxStr);
+    }
+  };
+
   beangle.extend({
     styleCache:{},
     modules:{},

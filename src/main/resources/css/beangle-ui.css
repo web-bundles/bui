@@ -420,6 +420,7 @@ fieldset.listset li > label.title{
 
 fieldset.listset label.comment{
     padding-left: 5px;
+    font-weight: inherit;
 }
 
 fieldset.listset em{
