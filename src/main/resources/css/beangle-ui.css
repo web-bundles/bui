@@ -234,6 +234,14 @@ td.search-item input[type="text"]{
     width:100px;
     border: 0.5px solid gray;
     height:1.5625rem;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+}
+
+td.search-item input:focus {
+    outline: none !important;
+    border-color: #719ECE;
+    box-shadow: 0 0 10px #719ECE;
 }
 
 td.search-item select{
@@ -445,16 +453,24 @@ fieldset.listset li.foot {
     padding-left: 110px;
 }
 
-fieldset.listset li > input[type="text"],input[type="password"],input[type="number"] {
+fieldset.listset li > input[type="text"],input[type="password"],input[type="number"],input[type="email"],input[type="url"] {
     border: 0.5px solid gray;
     height:1.5625rem;
     width:200px;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
 }
 
 fieldset.listset li > select {
     height:1.5625rem;
     width:200px;
     font-size:0.75rem !important;
+}
+
+fieldset.listset li > input:focus {
+    outline: none !important;
+    border-color: #719ECE;
+    box-shadow: 0 0 10px #719ECE;
 }
 /*
  * Module UI Style
