@@ -34,6 +34,9 @@
       search_field.bind('keyup.ajaxchosen', function() {
         var field, success, raw_val, val;
         raw_val = $(this).val();
+        if(raw_val == chosenOptions.placeholder_text){
+          raw_val="";
+        }
         val = $.trim(raw_val);
         if (val === $(this).data('prevVal')) {
           return false;
