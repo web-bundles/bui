@@ -80,6 +80,7 @@
     background-color: #c7dbff;
     border: 0px solid #006CB2;
     font-size:0.8125rem !important;
+    overflow-x:auto;
 }
 
 .gridbar-top{
@@ -94,6 +95,9 @@
 
 .girdbar-pgbar{height:22px;float:right;margin:0px 5px 0px 0px;padding-top:1px;line-height: 22px;}
 
+.gridcontent{
+  overflow-x:auto;
+}
 .pgbar-label{background-color:#e9f2f8;}
 
 .pgbar-input-label{}
@@ -104,6 +108,9 @@
 
 .pgbar-go{width:30px;height:18px;font-size: 0.8em;text-align:center;margin:0px;padding:0px 0px 2px 0px;border:solid;border-width:1px;border-color:#006CB2;display:none;}
 
+.pgbar-text{
+  display:none;
+}
 /*toolbar*/
 .toolbar{
   height:1.4375rem;
@@ -249,6 +256,146 @@ td.search-item select{
     height:1.5625rem;
     font-size:0.75rem !important;
 }
+.indexpanel{
+    border-collapse: collapse;
+    border:solid;
+    border-width:0.5px;
+    border-color:#006CB2;
+    margin:0px 0px 0px 0px;
+    width:100%;
+}
+.index_view{
+    border:solid;
+    border-width:0px;
+    border-right-width:0.5px;
+    border-color:#006CB2;
+    vertical-align: top;
+    background-color: #E1ECFF;
+    width:170px;
+}
+
+.index_content{
+    vertical-align: top;
+    padding:0;
+}
+
+.index_title{
+    border:solid;
+    border-width:0.5px;
+    margin:0px 0px 0px 0px;
+    background-color :#E1ECFF;
+    border-color:#006CB2;
+    width:100%;
+}
+
+.search-container{
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: row;
+    -ms-flex-wrap: wrap;
+    flex-wrap:wrap;
+    border-collapse: collapse;
+    border:solid;
+    border-width:0.5px;
+    border-color:#006CB2;
+    margin:0px 0px 0px 0px;
+    width:100%;
+}
+
+.search-panel{
+    border:solid;
+    border-width:0px;
+    border-color:#006CB2;
+    background-color: #E1ECFF;
+    font-size:0.8125rem !important;
+    width:100%;
+}
+
+.search-list{
+    overflow-x:hidden;
+    width:100%;
+}
+
+.search-widget{
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content: space-between;
+    position: relative;
+    boxing-size:content-box;
+}
+
+.search-header {
+    width:170px;
+    height:23px;
+    border:solid;
+    border-width: 0px 0.5px 0.5px 0px;
+    border-color: #006CB2;
+    background-color: #E1ECFF;
+    margin:0px 0px 4px 0px;
+    display:none;
+}
+
+.search-footer{
+    padding-top:3px;
+    margin: auto;
+    text-align:center;
+}
+.search-item {
+}
+
+.search-item input[type="text"]{
+    width:100px;
+    border: 0.5px solid gray;
+    height:1.5625rem;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+}
+
+.search-item input:focus {
+    outline: none !important;
+    border-color: #719ECE;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+.search-item select{
+    width:100px;
+    height:1.5625rem;
+    font-size:0.75rem !important;
+}
+
+@media (min-width: 768px) {
+  .search-container{
+    -ms-flex-wrap: nowrap;
+    flex-wrap:nowrap;
+  }
+  .search-panel{
+    width:170px;
+    flex-shrink:0;
+    border-right-width:0.5px;
+  }
+  .search-item {
+    width: 170px;
+    padding: 0px 6px 0px 0px;
+    text-align: right;
+  }
+  .search-widget{
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap:nowrap;
+    flex-direction:column;
+    align-items:center;
+  }
+  .search-header {
+    display:block;
+  }
+  .pgbar-text{
+    display:inline-block;
+  }
+}
+
 
 
 .V {height:1px;font-size:0pt;padding:0px;border-top:1px solid #4791C5;}
@@ -269,6 +416,7 @@ td.search-item select{
     background-color: #c7dbff;
     font-weight:bolder;
 }
+
 .formTable .tfoot{
     color: #000000;
     text-decoration: none;
@@ -334,38 +482,7 @@ table.infoTable td.content{
 table.infoTitle{
 }
 
-/** Index Panel*/
-.indexpanel{
-    border-collapse: collapse;
-    border:solid;
-    border-width:0.5px;
-    border-color:#006CB2;
-    margin:0px 0px 0px 0px;
-    width:100%;
-}
-.index_view{
-    border:solid;
-    border-width:0px;
-    border-right-width:0.5px;
-    border-color:#006CB2;
-    vertical-align: top;
-    background-color: #E1ECFF;
-    width:170px;
-}
 
-.index_content{
-    vertical-align: top;
-    padding:0;
-}
-
-.index_title{
-    border:solid;
-    border-width:0.5px;
-    margin:0px 0px 0px 0px;
-    background-color :#E1ECFF;
-    border-color:#006CB2;
-    width:100%;
-}
 
 table.settingTable td{
     border:solid;
