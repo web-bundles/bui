@@ -122,11 +122,11 @@
 .toolbar-icon{
     background-image: url(../icons/16x16/actions.png);
     display:inline-block;
-    /**ie6 hack*/
-    vertical-align:bottom !important;
-    vertical-align:baseline;
+    vertical-align:bottom;
     margin:2px 2px 0px 0px;
-    border:0px
+    border:0px;
+    width: 16px;
+    height: 16px;
 }
 
 .toolbar-img {vertical-align:bottom;margin-top:2px;margin-right:2px;border:0px}
@@ -390,13 +390,12 @@ td.search-item select{
     background-color: #E1ECFF;
     margin:0px 0px 4px 0px;
     display:block;
+    line-height:100%;
   }
   .pgbar-text{
     display:inline-block;
   }
 }
-
-
 
 .V {height:1px;font-size:0pt;padding:0px;border-top:1px solid #4791C5;}
 
@@ -578,44 +577,54 @@ fieldset.listset li > input:focus {
     box-shadow: 0 0 10px #719ECE;
 }
 
-.icon-action{background-image: url(../icons/16x16/actions.png);display:inline-block;vertical-align:bottom;margin-top:2px;margin-right:2px;border:0px}
-.action-activate{ background-position: 0 0; width: 16px; height: 16px; }
-.action-backward{ background-position: -66px 0; width: 16px; height: 16px; }
-.action-close{ background-position: -132px 0; width: 16px; height: 16px; }
-.action-config{ background-position: -198px 0; width: 16px; height: 16px; }
-.action-default{ background-position: -264px 0; width: 16px; height: 16px; }
+.icon-action{
+    background-image: url(../icons/16x16/actions.png);
+    display:inline-block;
+    vertical-align:bottom;
+    margin-top:2px;
+    margin-right:2px;
+    border:0px;
+    width: 16px;
+    height: 16px;
+}
+
+.action-activate{ background-position: 0 0;}
+.action-backward{ background-position: -66px 0;}
+.action-close{ background-position: -132px 0;}
+.action-config{ background-position: -198px 0;}
+.action-default{ background-position: -264px 0;}
 .action-downarrow{ background-position: -330px 0; width: 8px; height: 8px; }
-.action-download{ background-position: -388px 0; width: 16px; height: 16px; }
-.action-edit-copy{ background-position: -454px 0; width: 16px; height: 16px; }
-.action-edit-cut{ background-position: -520px 0; width: 16px; height: 16px; }
-.action-edit-delete{ background-position: -586px 0; width: 16px; height: 16px; }
-.action-edit-find{ background-position: -652px 0; width: 16px; height: 16px; }
-.action-excel{ background-position: -718px 0; width: 16px; height: 16px; }
-.action-freeze{ background-position: -784px 0; width: 16px; height: 16px; }
-.action-go-first{ background-position: -850px 0; width: 16px; height: 16px; }
-.action-go-home{ background-position: -916px 0; width: 16px; height: 16px; }
-.action-go-jump{ background-position: -982px 0; width: 16px; height: 16px; }
-.action-go-last{ background-position: -1048px 0; width: 16px; height: 16px; }
-.action-go-next{ background-position: -1114px 0; width: 16px; height: 16px; }
-.action-go-previous{ background-position: -1180px 0; width: 16px; height: 16px; }
-.action-help-contents{ background-position: -1246px 0; width: 16px; height: 16px; }
-.action-inbox{ background-position: -1312px 0; width: 16px; height: 16px; }
-.action-info{ background-position: -1378px 0; width: 16px; height: 16px; }
-.action-list{ background-position: -1506px 0; width: 16px; height: 16px; }
-.action-mail-reply{ background-position: -1572px 0; width: 16px; height: 16px; }
-.action-new{ background-position: -1638px 0; width: 16px; height: 16px; }
-.action-office-chart-area{ background-position: -1704px 0; width: 16px; height: 16px; }
-.action-office-chart-line{ background-position: -1770px 0; width: 16px; height: 16px; }
-.action-office-chart-pie{ background-position: -1836px 0; width: 16px; height: 16px; }
+.action-download{ background-position: -388px 0;}
+.action-edit-copy{ background-position: -454px 0;}
+.action-edit-cut{ background-position: -520px 0;}
+.action-edit-delete{ background-position: -586px 0;}
+.action-edit-find{ background-position: -652px 0;}
+.action-excel{ background-position: -718px 0;}
+.action-freeze{ background-position: -784px 0;}
+.action-go-first{ background-position: -850px 0;}
+.action-go-home{ background-position: -916px 0;}
+.action-go-jump{ background-position: -982px 0;}
+.action-go-last{ background-position: -1048px 0;}
+.action-go-next{ background-position: -1114px 0;}
+.action-go-previous{ background-position: -1180px 0;}
+.action-help-contents{ background-position: -1246px 0;}
+.action-inbox{ background-position: -1312px 0;}
+.action-info{ background-position: -1378px 0;  }
+.action-list{ background-position: -1506px 0;}
+.action-mail-reply{ background-position: -1572px 0;}
+.action-new{ background-position: -1638px 0;}
+.action-office-chart-area{ background-position: -1704px 0;}
+.action-office-chart-line{ background-position: -1770px 0;}
+.action-office-chart-pie{ background-position: -1836px 0;}
 .action-paperclip{ background-position: -1902px 0; width: 15px; height: 15px; }
-.action-print{ background-position: 0 -66px; width: 16px; height: 16px; }
-.action-refresh{ background-position: -66px -66px; width: 16px; height: 16px; }
-.action-save{ background-position: -132px -66px; width: 16px; height: 16px; }
+.action-print{ background-position: 0 -66px;}
+.action-refresh{ background-position: -66px -66px;}
+.action-save{ background-position: -132px -66px;}
 .action-sort-asc{ background-position: -198px -66px; width: 10px; height: 5px; }
 .action-sort-desc{ background-position: -258px -66px; width: 10px; height: 5px; }
-.action-update{ background-position: -318px -66px; width: 16px; height: 16px; }
-.action-user-logout{ background-position: -384px -66px; width: 16px; height: 16px; }
-.action-user-trash{ background-position: -450px -66px; width: 16px; height: 16px; }
+.action-update{ background-position: -318px -66px;}
+.action-user-logout{ background-position: -384px -66px;}
+.action-user-trash{ background-position: -450px -66px;}
 
 /*
  * patches
