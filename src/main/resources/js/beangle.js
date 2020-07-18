@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version="0.2.1";
+  beangle.version="0.3.0";
   /** extend function */
   beangle.extend= function(map){
     for(attr in map){
@@ -48,7 +48,6 @@
         mz.style.zIndex = "1040";
         mz.style.top = "0px";
         mz.style.right = "0px";
-        mz.style.width = "55px";
         mz.style.height = "20px"
         mz.style.background = "#F9EDBE";
         mz.style.padding = "2px";
@@ -57,12 +56,12 @@
         mz.appendChild(text);
     }else {
         mz.innerHTML=loadingMessage;
-        mz.style.visibility = 'visible';
+        mz.style.display = 'block';
     }
   };
   beangle.hideAjaxMessage=function(){
       var mz = document.getElementById('messageZone');
-      if(mz)mz.style.visibility='hidden';
+      if(mz)mz.style.display='none';
   };
 
   //History--------------------------
@@ -407,21 +406,21 @@
         //1.native onsubmit
         if(myForm.onsubmit){
           rs=null;
-          try{rs=myForm.onsubmit();}catch(e){alert(e);return;}
+          try{rs=myForm.onsubmit();}catch(e){alert(e);return false;}
           if(!rs){
-            return;
+            return false;
           }
         }
         //2. submit hook
         if(onsubmit){
           rs=null;
           if(typeof onsubmit == "function"){
-            try{rs=onsubmit(myForm);}catch(e){alert(e);return;}
+            try{rs=onsubmit(myForm);}catch(e){alert(e);return false;}
           }else{
             rs=eval(onsubmit);
           }
           if(!rs){
-            return;
+            return false;
           }
         }
         //3. check target and action
@@ -454,6 +453,7 @@
           myForm.target = origin_target;
           myForm.action = origin_action;
         }
+        return true;
       },
       ajaxSubmit : function(formId,action,target){
         if(!action) action=document.getElementById(formId).action;
@@ -505,6 +505,9 @@
        * @author chaostone 2006-4-7
        */
       addInput : function (form,name,value,type){
+        if(!form){
+          return;
+        }
         //防止设置form的属性
         if(form[name]!=null && (typeof form[name].tagName)!="undefined"){
           form[name].value=value;
@@ -518,6 +521,10 @@
         }
       },
       addInputs : function (form,name,value,type){
+        if(!form){
+          console.log("add inputs to null form");
+          return;
+        }
         if(null==type) type="hidden";
         for(i=0;i<value.length;i++){
           var input = document.createElement('input');
@@ -883,6 +890,59 @@
     }
   };
 
+  beangle.getCookie = function(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  };
+
+  beangle.createCookie =function(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/;SameSite=Strict";
+  };
+
+  beangle.deleteCookie =function(name, path, domain ) {
+    if( getCookie( name ) ) {
+      document.cookie = name + "=" +
+        ((path) ? ";path="+path:"")+
+        ((domain)?";domain="+domain:"") +
+        ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+    }
+  };
+
+  beangle.displayFileInfo=function(domId,file,maxSize){
+    var maxStr="";
+    if(maxSize >= 1024*1024){
+      maxStr = (maxSize/1024.0/1024.0).toFixed(1)+'MB';
+    }else{
+      maxStr = (maxSize/1024.0).toFixed(1)+'KB';
+    }
+    jQuery('#'+domId).attr("title","最大"+maxStr);
+    var sizeStr="";
+    if(file.size >= 1024*1024){
+      sizeStr = (file.size/1024.0/1024.0).toFixed(1)+'MB';
+    }else{
+      sizeStr = (file.size/1024.0).toFixed(1)+'KB';
+    }
+    if(file.size > maxSize){
+      jQuery('#'+domId).css('color','red');
+      jQuery('#'+domId).html("大小"+sizeStr+",超过"+maxStr);
+    }else{
+      jQuery('#'+domId).css('color','black');
+      jQuery('#'+domId).html("大小"+sizeStr+",最大"+maxStr);
+    }
+  };
+
   beangle.extend({
     styleCache:{},
     modules:{},
@@ -986,7 +1046,7 @@
             try{
                 fn();
             }catch(e){
-                alert(e);
+                alert(e.message +"@"+e.fileName+":"+e.lineNumber);
             }
         });
     }
