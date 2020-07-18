@@ -505,6 +505,9 @@
        * @author chaostone 2006-4-7
        */
       addInput : function (form,name,value,type){
+        if(!form){
+          return;
+        }
         //防止设置form的属性
         if(form[name]!=null && (typeof form[name].tagName)!="undefined"){
           form[name].value=value;
@@ -518,6 +521,10 @@
         }
       },
       addInputs : function (form,name,value,type){
+        if(!form){
+          console.log("add inputs to null form");
+          return;
+        }
         if(null==type) type="hidden";
         for(i=0;i<value.length;i++){
           var input = document.createElement('input');
@@ -1039,7 +1046,7 @@
             try{
                 fn();
             }catch(e){
-                alert(e);
+                alert(e.message +"@"+e.fileName+":"+e.lineNumber);
             }
         });
     }

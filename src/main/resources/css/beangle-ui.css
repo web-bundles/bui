@@ -328,13 +328,6 @@ td.search-item select{
 }
 
 .search-header {
-    width:170px;
-    height:23px;
-    border:solid;
-    border-width: 0px 0.5px 0.5px 0px;
-    border-color: #006CB2;
-    background-color: #E1ECFF;
-    margin:0px 0px 4px 0px;
     display:none;
 }
 
@@ -343,8 +336,13 @@ td.search-item select{
     margin: auto;
     text-align:center;
 }
+
 .search-item {
+    width: 170px;
+    padding: 0px 6px 0px 0px;
+    text-align: right;
 }
+
 
 .search-item input[type="text"]{
     width:100px;
@@ -376,11 +374,6 @@ td.search-item select{
     flex-shrink:0;
     border-right-width:0.5px;
   }
-  .search-item {
-    width: 170px;
-    padding: 0px 6px 0px 0px;
-    text-align: right;
-  }
   .search-widget{
     display: -ms-flexbox;
     display: flex;
@@ -389,6 +382,13 @@ td.search-item select{
     align-items:center;
   }
   .search-header {
+    width:170px;
+    height:23px;
+    border:solid;
+    border-width: 0px 0.5px 0.5px 0px;
+    border-color: #006CB2;
+    background-color: #E1ECFF;
+    margin:0px 0px 4px 0px;
     display:block;
   }
   .pgbar-text{
@@ -622,6 +622,7 @@ fieldset.listset li > input:focus {
  */
 .nav-tabs-compact > li > a{
   padding: 5px 15px !important;
+  font-size:0.875rem;
 }
 
 .chosen-container{
