@@ -382,10 +382,10 @@ td.search-item select{
     align-items:center;
   }
   .search-header {
-    width:170px;
+    width:169px;
     height:23px;
     border:solid;
-    border-width: 0px 0.5px 0.5px 0px;
+    border-width: 0px 0px 0.5px 0px;
     border-color: #006CB2;
     background-color: #E1ECFF;
     margin:0px 0px 4px 0px;
