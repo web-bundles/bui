@@ -455,6 +455,31 @@
         }
         return true;
       },
+      displayWaiting: function(formId,btn){
+        var disable=false;
+        var form = document.getElementById(formId);
+        if(form){
+          if(form.target){
+            var ele = form;
+            var p = ele.parentNode;
+            while(p){
+              if(p.id && p.id==form.target){
+                disable=true;
+                break;
+              }else{
+                if(p==p.parentNode) p=null;
+                else p=p.parentNode;
+              }
+            }
+          }else{
+             disable=true;
+          }
+        }
+        if(disable){
+          btn.innerHTML = btn.innerHTML+"...";
+          btn.disabled=true;
+        }
+      },
       ajaxSubmit : function(formId,action,target){
         if(!action) action=document.getElementById(formId).action;
         require(["jquery-form"],function(){
