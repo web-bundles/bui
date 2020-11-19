@@ -1134,9 +1134,14 @@ __private = {
 // Install the label output.
 (function($) {
     function getIdentifier($obj) {
-        return $obj.attr('id').length ?
-            $obj.attr('id') :
-            $obj.attr('name');
+        if ($obj.attr('id') && $obj.attr('id').length) {
+            return $obj.attr('id');
+        }
+        else if ($obj.attr('name') && $obj.attr('name').length) {
+            return $obj.attr('name');
+        }else{
+            return '';
+        }
     }
 
     $.validity.outputs.label = {
