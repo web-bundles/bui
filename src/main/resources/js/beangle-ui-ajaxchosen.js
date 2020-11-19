@@ -100,7 +100,7 @@
         return $.ajax(options);
       });
 
-      search_field.trigger('keyup.ajaxchosen');
+      //search_field.trigger('keyup.ajaxchosen');
       return search_field;
     };
   })(jQuery);
