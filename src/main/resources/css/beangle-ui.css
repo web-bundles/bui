@@ -151,15 +151,15 @@
 
 .toolbar-item-disabled{display:none;}
 
-.toolbar-item-selected{background-color:#4791C5;float:left;padding:2px 3px 2px 3px;cursor:pointer;}
+.toolbar-item-selected{background-color:#4791C5;float:left;padding:2px 3px 2px 3px;cursor:pointer;line-height: 100%;}
 
-.toolbar-item-transfer{float:left;padding:1px 2px 1px 2px;background-color:#e9f2f8;border:1px solid #336699;cursor:pointer;line-height: 100%;}
+.toolbar-item-transfer{float:left;padding:2px 3px 2px 3px;background-color:#e9f2f8;cursor:pointer;line-height: 100%;}
 
 .toolbar-menu{margin-top:1px;margin-left:0px;background-color:#e9f2f8;display:none;position:absolute;z-index:100;padding:1px;overflow:visible;border:solid 1px #4791C5;white-space:nowrap;}
 
-.toolbar-menuitem{padding:1px 2px 1px 2px;cursor:pointer;}
+.toolbar-menuitem{padding:2px 3px 2px 3px;cursor:pointer;}
 
-.toolbar-menuitem-transfer{background-color:#FFFFFF;padding:1px 2px 1px 2px;cursor:pointer;}
+.toolbar-menuitem-transfer{background-color:#FFFFFF;padding:2px 3px 2px 3px;cursor:pointer;}
 
 .toolbar-group-separator{float:left;margin:0px 10px 0px 10px;}
 

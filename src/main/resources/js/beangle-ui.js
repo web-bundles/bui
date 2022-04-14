@@ -81,7 +81,7 @@
 
     this.addHr=function(){
       hrdiv=this.appendDiv(null,"toolbar-line");
-      hrdiv.innerHTML='<img height="0.5px" width="100%" align="top" src="' + imagePath + 'keyline.png" />';
+      hrdiv.innerHTML='<img height="1px" width="100%" align="top" src="' + imagePath + 'keyline.png" />';
     }
 
     function genIconElement(action,cssClassOrIconPath){
