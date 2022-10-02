@@ -29,9 +29,7 @@
             ".chosen-search > input");
       }
 
-      search_field.unbind("keyup");
-
-      search_field.bind('keyup.ajaxchosen', function() {
+      search_field.bind('ajaxchosen', function() {
         var field, success, raw_val, val;
         raw_val = $(this).val();
         if(raw_val == chosenOptions.placeholder_text){
@@ -100,7 +98,22 @@
         return $.ajax(options);
       });
 
-      //search_field.trigger('keyup.ajaxchosen');
+     var inComposition=false;
+     search_field.on('compositionstart',function(){inComposition=true;})
+     search_field.on('compositionend',function(){inComposition=false;})
+     search_field.unbind("keyup");
+      var lastKeyUpTime = null;
+      // 界定是否在输入的阈值（单位:毫秒）,如果一个用户在n毫秒内没有输入动作，那么就可以认为用户已经输入完毕可以执行ajax动作了
+      var typingThreshold = 500;
+      search_field.bind("keyup.chosen", function() {
+        lastKeyUpTime = new Date().getTime();
+        setTimeout(function() {
+          var currentKeyUpTime = new Date().getTime();
+          if (!inComposition && currentKeyUpTime - lastKeyUpTime > typingThreshold) {
+            search_field.trigger('ajaxchosen');
+          }
+        }, typingThreshold);
+      });
       return search_field;
     };
   })(jQuery);
