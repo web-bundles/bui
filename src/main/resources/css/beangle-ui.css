@@ -28,7 +28,7 @@
 /* grid */
 .grid{border-color:#006CB2;margin: 0px 0px 0px 0px ;font-size:0.8125rem !important;}
 
-.grid-caption{background-color: #222d32;color: #FFFFFF;margin-bottom: 0;padding: 5px;font-weight: bold;}
+.grid-caption{padding: 5px;text-align: center;font-weight: bold;}
 
 .gridempty{border-top: 0.5px solid #006CB2;text-align:center;}
 
@@ -326,7 +326,9 @@ td.search-item select{
     position: relative;
     boxing-size:content-box;
 }
-
+.search-widget .btn-sm{
+    font-size:0.8125rem;
+}
 .search-header {
     display:none;
 }
@@ -577,6 +579,9 @@ fieldset.listset li > input:focus {
     box-shadow: 0 0 10px #719ECE;
 }
 
+fieldset.listset .btn-sm{
+    font-size: .8125rem !important;
+}
 .icon-action{
     background-image: url(../icons/16x16/actions.png);
     display:inline-block;
