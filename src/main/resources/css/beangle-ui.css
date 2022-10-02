@@ -326,8 +326,8 @@ td.search-item select{
     position: relative;
     boxing-size:content-box;
 }
-.search-widget .btn-sm{
-    font-size:0.8125rem;
+div.search-footer .btn-sm{
+    font-size:0.8125rem !important;
 }
 .search-header {
     display:none;
