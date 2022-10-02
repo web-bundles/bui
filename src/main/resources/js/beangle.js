@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version="0.3.2";
+  beangle.version="0.3.3";
   /** extend function */
   beangle.extend= function(map){
     for(attr in map){
@@ -165,7 +165,8 @@
   //Go and ajax---------------------------------
   beangle.extend({
     //jump to href or anchor
-    Go : function (obj,target){
+    Go : function (obj,target,confirmMsg){
+      if(confirmMsg && !confirm(confirmMsg)) return false;
       var url=obj;
       if(typeof obj =="object" && obj.tagName.toLowerCase()=="a"){
         url=obj.href;
@@ -177,17 +178,15 @@
       if("_self"==target){ self.location=url;}
       else if("_parent"==target){self.parent.location=url;}
       else if("_top" ==target){self.top.location=url;}
-      else if("_blank" ==target  ){window.open(url);}
+      else if("_blank" ==target){window.open(url);}
       else{
         if(!beangle.isAjaxTarget(target)){
-          //FIXME _blank,_top
           document.getElementById(target).src=url;
         }else{
           if(beangle.ajaxhistory){
             beangle.history.Go(url,target);
           }else {
-            //using post ,hack ie8 get cache
-            jQuery('#'+target).load(url,{});
+            jQuery('#'+target).load(url,{});//using post ,hack ie8 get cache
           }
         }
       }
@@ -1035,15 +1034,15 @@
 
     /** Load required CSS Files */
     requireCss : function(cssFile, basePath) {
-        var path = (basePath || "") + cssFile;
-        if (!beangle.styleCache[path]) {
-            var link = document.createElement("link");
-            link.setAttribute("rel", "stylesheet");
-            link.setAttribute("type", "text/css");
-            link.setAttribute("href", path);
-            document.getElementsByTagName("head")[0].appendChild(link);
-            beangle.styleCache[path] = true;
-        }
+      var path = (basePath || "") + cssFile;
+      if (!beangle.styleCache[path]) {
+        var link = document.createElement("link");
+        link.setAttribute("rel", "stylesheet");
+        link.setAttribute("type", "text/css");
+        link.setAttribute("href", path);
+        document.getElementsByTagName("head")[0].appendChild(link);
+        beangle.styleCache[path] = true;
+      }
     }
 
   });
@@ -1062,17 +1061,3 @@
     }
   }
 })(window);
-
-// fix jquery ready bug
-(function(){
-    var jqReady = jQuery.prototype.ready;
-    jQuery.prototype.ready = function( fn ) {
-        return jqReady(function(){
-            try{
-                fn();
-            }catch(e){
-                alert(e.message +"@"+e.fileName+":"+e.lineNumber);
-            }
-        });
-    }
-})();
