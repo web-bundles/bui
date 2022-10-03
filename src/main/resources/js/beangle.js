@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version="0.3.3";
+  beangle.version="0.3.4";
   /** extend function */
   beangle.extend= function(map){
     for(attr in map){
