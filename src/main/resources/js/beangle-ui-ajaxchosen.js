@@ -104,12 +104,12 @@
      search_field.unbind("keyup");
       var lastKeyUpTime = null;
       // 界定是否在输入的阈值（单位:毫秒）,如果一个用户在n毫秒内没有输入动作，那么就可以认为用户已经输入完毕可以执行ajax动作了
-      var typingThreshold = 500;
+      var typingThreshold = 300;
       search_field.bind("keyup.chosen", function() {
         lastKeyUpTime = new Date().getTime();
         setTimeout(function() {
-          var currentKeyUpTime = new Date().getTime();
-          if (!inComposition && currentKeyUpTime - lastKeyUpTime > typingThreshold) {
+          var timeElapse = (new Date().getTime()) - lastKeyUpTime;
+          if (!inComposition && timeElapse >= typingThreshold) {
             search_field.trigger('ajaxchosen');
           }
         }, typingThreshold);
