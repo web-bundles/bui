@@ -36,8 +36,9 @@
   }
   beangle.base=null;
   beangle.staticBase=null;
+  beangle.contextPath=null;
   beangle.getContextPath=function(){
-    if(beangle.base) return beangle.base;
+    if(beangle.contextPath) return beangle.contextPath;
     var
       baseElements = document.getElementsByTagName('base'),
       baseElement = null,
@@ -47,7 +48,8 @@
       baseHref = baseElement.href.replace(/[^\/]+$/,'');
     }
     beangle.base=baseHref;
-    return baseHref;
+    beangle.contextPath=baseHref.substring(baseHref.indexOf(document.domain)+document.domain.length)
+    return beangle.contextPath;
   }
 
   beangle.ajaxhistory=(typeof History!="undefined" && typeof History.Adapter !="undefined");
@@ -80,38 +82,36 @@
     },
     busy:false,
     init : function(){
-      jQuery(document).ready(function(){
-        History.Adapter.bind(window,'statechange',function(){
-          var currState = History.getState(false,false)||{};
-          if(beangle.history.isValidState(currState)){
-            if(jQuery(currState.data.container).length>0){
-              jQuery(currState.data.container).html(currState.data.content);
-              beangle.history.applyState(currState);
-            }else{
-              beangle.history.busy=true;
-              var statePaths = [];//存储嵌套的state路径
-              statePaths.push(currState);
-              while(currState && currState.data.parentId){
-                currState = History.getStateById(currState.data.parentId);
-                if(beangle.history.isValidState(currState)){
-                  statePaths.push(currState);
-                  if(jQuery(currState.data.container).length>0){
-                    break;
-                  }
-                }else{
+      History.Adapter.bind(window,'statechange',function(){
+        var currState = History.getState(false,false)||{};
+        if(beangle.history.isValidState(currState)){
+          if(jQuery(currState.data.container).length>0){
+            jQuery(currState.data.container).html(currState.data.content);
+            beangle.history.applyState(currState);
+          }else{
+            beangle.history.busy=true;
+            var statePaths = [];//存储嵌套的state路径
+            statePaths.push(currState);
+            while(currState && currState.data.parentId){
+              currState = History.getStateById(currState.data.parentId);
+              if(beangle.history.isValidState(currState)){
+                statePaths.push(currState);
+                if(jQuery(currState.data.container).length>0){
                   break;
                 }
+              }else{
+                break;
               }
-              for(var i=statePaths.length-1;i>=0;i--){
-                var state = statePaths[i];
-                jQuery(state.data.container).html(state.data.content);
-                beangle.history.applyState(state);
-              }
-              beangle.history.busy=false;
             }
-            if(History.idToState.size>beangle.history.maxStates)History.reset();
+            for(var i=statePaths.length-1;i>=0;i--){
+              var state = statePaths[i];
+              jQuery(state.data.container).html(state.data.content);
+              beangle.history.applyState(state);
+            }
+            beangle.history.busy=false;
           }
-        });
+          if(History.idToState.size>beangle.history.maxStates)History.reset();
+        }
       });
     },
 
@@ -122,13 +122,13 @@
         type: "GET",dataType: "html",
         complete: function( jqXHR) {
           target="#"+target;
-          var state = History.getState(false,false)||{id:'',url:url}
+          var state = History.getState(false,false)||{id:''}
           var parentId = state.id
           if(jQuery(target).html().length>0){
             beangle.history.snapshot();
-            History.pushState({content:jqXHR.responseText,container:target,parentId:parentId},"",url);
+            History.pushState({content:jqXHR.responseText,container:target,parentId:parentId},"",beangle.history.convertUrl(url));
           }else{
-            History.replaceState({content:jqXHR.responseText,container:target,parentId:parentId},"",url);
+            History.replaceState({content:jqXHR.responseText,container:target,parentId:parentId},"",beangle.history.convertUrl(url));
           }
           beangle.hideAjaxMessage();
         },
@@ -154,6 +154,16 @@
         afterApplyState=null;
       }
     },
+    convertUrl:function(url){
+      if(url.startsWith(beangle.contextPath)){
+         return beangle.base+"?path=" + encodeURIComponent(url.replace(beangle.contextPath,"/"));
+      }else if(url.startsWith(beangle.base)){
+        var tail = url.substring(beangle.base.length);
+        return beangle.base+"?path=" + encodeURIComponent(tail)
+      }else{
+        return url;
+      }
+    },
     submit : function(form,action,target){
       if(jQuery.type(form)=="string" && form.indexOf("#")!=0){
         form = "#" + form;
@@ -167,7 +177,7 @@
         beangle.history.snapshot();
         var state = History.getState(false,false)||{id:''}
         var parentId = state.id
-        History.pushState({content:result,container:target,parentId:parentId},"",action);
+        History.pushState({content:result,container:target,parentId:parentId},"",beangle.history.convertUrl(action));
         beangle.hideAjaxMessage();
         return false;
       }
