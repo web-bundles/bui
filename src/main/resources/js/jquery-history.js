@@ -686,7 +686,7 @@
 		 * History.idToState
 		 * 1-1: State ID to State Object
 		 */
-		History.idToState = History.idToState||{};
+		History.idToState = new Map();
 
 		/**
 		 * History.stateToId
@@ -701,23 +701,16 @@
 		History.urlToId = History.urlToId||{};
 
 		/**
-		 * History.storedStates
-		 * Store the states in an array
+		 * History.lastSavedState
 		 */
-		History.storedStates = History.storedStates||[];
-
-		/**
-		 * History.savedStates
-		 * Saved the states in an array
-		 */
-		History.savedStates = History.savedStates||[];
+		History.lastSavedState = {};
 
 		/**
 		 * History.noramlizeStore()
 		 * Noramlize the store by adding necessary values
 		 */
 		History.normalizeStore = function(){
-			History.store.idToState = History.store.idToState||{};
+			History.store.idToState = History.store.idToState||new Map();
 			History.store.urlToId = History.store.urlToId||{};
 			History.store.stateToId = History.store.stateToId||{};
 		};
@@ -740,12 +733,6 @@
 			// Create
 			if ( !State && create ) {
 				State = History.createStateObject();
-			}
-
-			// Adjust
-			if ( friendly ) {
-				State = History.cloneObject(State);
-				State.url = State.cleanUrl||State.url;
 			}
 
 			// Return
@@ -777,14 +764,15 @@
 					// Generate a new ID
 					while ( true ) {
 						id = (new Date()).getTime() + String(Math.random()).replace(/\D/g,'');
-						if ( typeof History.idToState[id] === 'undefined' && typeof History.store.idToState[id] === 'undefined' ) {
+						if ( typeof History.idToState.get(id) === 'undefined' && typeof History.store.idToState.get(id) === 'undefined' ) {
 							break;
 						}
 					}
 
 					// Apply the new State to the ID
 					History.stateToId[str] = id;
-					History.idToState[id] = newState;
+					History.idToState.set(id,newState);
+					History.urlToId[newState.url] = newState.id;
 				}
 			}
 
@@ -880,7 +868,6 @@
 				'title': title,
 				'url': url
 			};
-
 			// Expand the State
 			State = History.normalizeState(State);
 
@@ -898,7 +885,7 @@
 			id = String(id);
 
 			// Retrieve
-			var State = History.idToState[id] || History.store.idToState[id] || undefined;
+			var State = History.idToState.get(id) || History.store.idToState.get(id) || undefined;
 
 			// Return State
 			return State;
@@ -1068,16 +1055,7 @@
 		 * @return {Object} State
 		 */
 		History.getLastSavedState = function(){
-			return History.savedStates[History.savedStates.length-1]||undefined;
-		};
-
-		/**
-		 * History.getLastStoredState()
-		 * Get an object containing the data, title and url of the current state
-		 * @return {Object} State
-		 */
-		History.getLastStoredState = function(){
-			return History.storedStates[History.storedStates.length-1]||undefined;
+			return History.lastSavedState||undefined;
 		};
 
 		/**
@@ -1102,23 +1080,6 @@
 		};
 
 		/**
-		 * History.storeState
-		 * Store a State
-		 * @param {Object} newState
-		 * @return {Object} newState
-		 */
-		History.storeState = function(newState){
-			// Store the State
-			History.urlToId[newState.url] = newState.id;
-
-			// Push the State
-			History.storedStates.push(History.cloneObject(newState));
-
-			// Return newState
-			return newState;
-		};
-
-		/**
 		 * History.isLastSavedState(newState)
 		 * Tests to see if the state is the last state
 		 * @param {Object} newState
@@ -1130,7 +1091,7 @@
 				newId, oldState, oldId;
 
 			// Check
-			if ( History.savedStates.length ) {
+			if ( History.lastSavedState ) {
 				newId = newState.id;
 				oldState = History.getLastSavedState();
 				oldId = oldState.id;
@@ -1150,63 +1111,8 @@
 		 * @return {boolean} changed
 		 */
 		History.saveState = function(newState){
-			// Check Hash
-			if ( History.isLastSavedState(newState) ) {
-				return false;
-			}
-
 			// Push the State
-			History.savedStates.push(History.cloneObject(newState));
-
-			// Return true
-			return true;
-		};
-
-		/**
-		 * History.getStateByIndex()
-		 * Gets a state by the index
-		 * @param {integer} index
-		 * @return {Object}
-		 */
-		History.getStateByIndex = function(index){
-			// Prepare
-			var State = null;
-
-			// Handle
-			if ( typeof index === 'undefined' ) {
-				// Get the last inserted
-				State = History.savedStates[History.savedStates.length-1];
-			}
-			else if ( index < 0 ) {
-				// Get from the end
-				State = History.savedStates[History.savedStates.length+index];
-			}
-			else {
-				// Get from the beginning
-				State = History.savedStates[index];
-			}
-
-			// Return State
-			return State;
-		};
-
-		/**
-		 * History.getCurrentIndex()
-		 * Gets the current index
-		 * @return (integer)
-		*/
-		History.getCurrentIndex = function(){
-			// Prepare
-			var index = null;
-
-			// No states saved
-			if(History.savedStates.length < 1) {
-				index = 0;
-			}
-			else {
-				index = History.savedStates.length-1;
-			}
-			return index;
+			History.lastSavedState = newState;
 		};
 
 		// ====================================================================
@@ -1375,7 +1281,7 @@
 
 			// Initial
 			if ( !title ) {
-				firstState = History.getStateByIndex(0);
+				firstState = History.lastSavedState;
 				if ( firstState && firstState.url === newState.url ) {
 					title = firstState.title||History.options.initialTitle;
 				}
@@ -1821,13 +1727,12 @@
 				// Check if we are the same state
 				if ( History.isLastSavedState(newState) ) {
 					// There has been no change (just the page's hash has finally propagated)
-					//History.debug('History.onPopState: no change', newState, History.savedStates);
+					//History.debug('History.onPopState: no change', newState, History.lastSavedState);
 					History.busy(false);
 					return false;
 				}
 
 				// Store the State
-				History.storeState(newState);
 				History.saveState(newState);
 
 				// Force update of the title
@@ -1885,9 +1790,7 @@
 				}
 				else {
 					// Store the newState
-					History.storeState(newState);
 					History.expectedStateId = newState.id;
-
 					// Push the newState
 					history.pushState(newState.id,newState.title,newState.url);
 
@@ -1942,9 +1845,7 @@
 				}
 				else {
 					// Store the newState
-					History.storeState(newState);
 					History.expectedStateId = newState.id;
-
 					// Push the newState
 					history.replaceState(newState.id,newState.title,newState.url);
 
@@ -1991,7 +1892,7 @@
 		/**
 		 * Create the initial State
 		 */
-		History.saveState(History.storeState(History.extractState(History.getLocationHref(),true)));
+		History.saveState(History.extractState(History.getLocationHref(),true));
 
 		/**
 		 * Bind for Saving Store
@@ -2011,7 +1912,7 @@
 				}
 
 				// Ensure
-				currentStore.idToState = currentStore.idToState || {};
+				currentStore.idToState = currentStore.idToState || new Map();
 				currentStore.urlToId = currentStore.urlToId || {};
 				currentStore.stateToId = currentStore.stateToId || {};
 
@@ -2020,7 +1921,7 @@
 					if ( !History.idToState.hasOwnProperty(item) ) {
 						continue;
 					}
-					currentStore.idToState[item] = History.idToState[item];
+					currentStore.idToState.set(item,History.idToState.get(item));
 				}
 				for ( item in History.urlToId ) {
 					if ( !History.urlToId.hasOwnProperty(item) ) {
@@ -2114,7 +2015,6 @@
 
 		} // !History.emulated.pushState
 
-
 	}; // History.initCore
 
 	// Try to Initialise History
@@ -2127,8 +2027,7 @@
 		History.store={};
 		History.normalizeStore();
 		History.savedHashes=[];
-		History.savedStates=[];
-		History.idToState={};
+		History.idToState=new Map();
 		History.urlToId={};
 		History.stateToId={};
 	}	

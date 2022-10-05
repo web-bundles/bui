@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version="0.3.4";
+  beangle.version="0.3.5";
   /** extend function */
   beangle.extend= function(map){
     for(attr in map){
@@ -35,22 +35,29 @@
     }
   }
   beangle.base=null;
+  beangle.staticBase=null;
+  beangle.getContextPath=function(){
+    if(beangle.base) return beangle.base;
+    var
+      baseElements = document.getElementsByTagName('base'),
+      baseElement = null,
+      baseHref = '';
+    if ( baseElements.length === 1 ) {
+      baseElement = baseElements[0];
+      baseHref = baseElement.href.replace(/[^\/]+$/,'');
+    }
+    beangle.base=baseHref;
+    return baseHref;
+  }
 
   beangle.ajaxhistory=(typeof History!="undefined" && typeof History.Adapter !="undefined");
 
   beangle.displayAjaxMessage=function() {
     var loadingMessage = "Loading...";
-    var mz = document.getElementById('messageZone');
+    var mz = document.getElementById('topLoadingMessageZone');
     if (!mz) {
         var mz = document.createElement('div');
-        mz.setAttribute('id', 'messageZone');
-        mz.style.position = "absolute";
-        mz.style.zIndex = "1040";
-        mz.style.top = "0px";
-        mz.style.right = "0px";
-        mz.style.height = "20px"
-        mz.style.background = "#F9EDBE";
-        mz.style.padding = "2px";
+        mz.setAttribute('id', 'topLoadingMessageZone');
         document.body.appendChild(mz);
         var text = document.createTextNode(loadingMessage);
         mz.appendChild(text);
@@ -60,54 +67,68 @@
     }
   };
   beangle.hideAjaxMessage=function(){
-      var mz = document.getElementById('messageZone');
+      var mz = document.getElementById('topLoadingMessageZone');
       if(mz)mz.style.display='none';
   };
 
   //History--------------------------
   beangle.history = {
     //最多存储20个状态
-  	maxStates:20,
+    maxStates:20,
+    isValidState:function(s){
+      return jQuery.type((s.data||{}).container)!="undefined" &&  jQuery.type((s.data||{}).content)!="undefined";
+    },
+    busy:false,
     init : function(){
-        if ( document.location.protocol === 'file:' ) {
-            alert('The HTML5 History API (and thus History.js) do not work on files, please upload it to a server.');
-            return;
-        }
-        jQuery(document).ready(function(){
-            History.Adapter.bind(window,'statechange',function(){
-                var currState = History.getState();
-                if(jQuery.type((currState.data||{}).container)!="undefined" &&  jQuery.type((currState.data||{}).content)!="undefined"){
-                    if(currState.data.updatedAt){
-                        var updatedInterval=(new Date()).getTime()-currState.data.updatedAt;
-                        //从更新发生到现在的时间间隔小于1秒的,是从replaceState发出的，这类更改状态的改变，不做任何处理。
-                        if(updatedInterval<=1000) return;
-                    }
-                    //jQuery(currState.data.container).empty();
-                    try{
-                      jQuery(currState.data.container).html(currState.data.content);
-                    }catch(e){alert(e)}
-                    beangle.history.applyState(currState);
-                    if(History.savedStates.length>beangle.history.maxStates)History.reset();
+      jQuery(document).ready(function(){
+        History.Adapter.bind(window,'statechange',function(){
+          var currState = History.getState(false,false)||{};
+          if(beangle.history.isValidState(currState)){
+            if(jQuery(currState.data.container).length>0){
+              jQuery(currState.data.container).html(currState.data.content);
+              beangle.history.applyState(currState);
+            }else{
+              beangle.history.busy=true;
+              var statePaths = [];//存储嵌套的state路径
+              statePaths.push(currState);
+              while(currState && currState.data.parentId){
+                currState = History.getStateById(currState.data.parentId);
+                if(beangle.history.isValidState(currState)){
+                  statePaths.push(currState);
+                  if(jQuery(currState.data.container).length>0){
+                    break;
+                  }
+                }else{
+                  break;
                 }
-            });
+              }
+              for(var i=statePaths.length-1;i>=0;i--){
+                var state = statePaths[i];
+                jQuery(state.data.container).html(state.data.content);
+                beangle.history.applyState(state);
+              }
+              beangle.history.busy=false;
+            }
+            if(History.idToState.size>beangle.history.maxStates)History.reset();
+          }
         });
+      });
     },
 
     Go : function(url,target){
+      if(beangle.history.busy) return;
       jQuery.ajax({
         url: url,cache:false,
         type: "GET",dataType: "html",
         complete: function( jqXHR) {
           target="#"+target;
+          var state = History.getState(false,false)||{id:'',url:url}
+          var parentId = state.id
           if(jQuery(target).html().length>0){
             beangle.history.snapshot();
-            History.pushState({content:jqXHR.responseText,container:target},"",url);
+            History.pushState({content:jqXHR.responseText,container:target,parentId:parentId},"",url);
           }else{
-            var state=History.getState();
-            History.replaceState({content:jqXHR.responseText,container:target,updatedAt:(new Date()).getTime()},state.title,state.url);
-            try{
-              jQuery(target).html(jqXHR.responseText);
-            }catch(e){alert(e)}
+            History.replaceState({content:jqXHR.responseText,container:target,parentId:parentId},"",url);
           }
           beangle.hideAjaxMessage();
         },
@@ -115,13 +136,11 @@
       });
     },
     snapshot:function(){
-      var state = History.getState();
-      if(state.data.content){
+      var state = History.getState(false,false)||{};
+      if(state.data && state.data.content){
         var _t = [];
         jQuery(state.data.container +' .box:checked').each(function(index, e) {_t[_t.length] = e.value;});
-        state.data.boxes=_t;
-        state.updatedAt=(new Date()).getTime();
-        if(_t.length>0) History.replaceState(state.data,state.title,state.url);
+        if(_t.length>0) state.data.boxes = _t;
       }
     },
     applyState:function(state){
@@ -136,29 +155,24 @@
       }
     },
     submit : function(form,action,target){
-        if(jQuery.type(form)=="string" && form.indexOf("#")!=0){
-          form = "#" + form;
-        }
-        if(jQuery.type(target)=="string" && target.indexOf("#")!=0){
-          target = "#" + target;
-        }
-        beangle.displayAjaxMessage();
+      if(jQuery.type(form)=="string" && form.indexOf("#")!=0){
+        form = "#" + form;
+      }
+      if(jQuery.type(target)=="string" && target.indexOf("#")!=0){
+        target = "#" + target;
+      }
+      beangle.displayAjaxMessage();
 
-        require(["jquery-form"],function(){
-          jQuery(form).ajaxForm({
-            success:function(result)  {
-              beangle.history.snapshot();
-              History.pushState({content:result,container:target},"",action);
-              beangle.hideAjaxMessage();
-              return false;},
-            error:function (response)  {
-              try{jQuery(target).html(response.responseText);}catch(e){alert(e)}
-              beangle.hideAjaxMessage();
-              return false;},
-            url:action
-          });
-          jQuery(form).submit();
-       });
+      var handleResult = function(result){
+        beangle.history.snapshot();
+        var state = History.getState(false,false)||{id:''}
+        var parentId = state.id
+        History.pushState({content:result,container:target,parentId:parentId},"",action);
+        beangle.hideAjaxMessage();
+        return false;
+      }
+      jQuery(form).ajaxForm({success:handleResult,error:handleResult,url:action});
+      jQuery(form).submit();
     }
   };
 
@@ -971,8 +985,8 @@
     styleCache:{},
     modules:{},
     register:function(base,modules){
-      if(!beangle.base){
-        beangle.base=base;
+      if(!beangle.staticBase){
+        beangle.staticBase=base;
       }
       var registed=false;
       for(var m in modules){
@@ -1003,7 +1017,7 @@
         if(module){
           if(module.css){
             for(var j=0;j<module.css.length;j++){
-              beangle.requireCss(module.css[j],beangle.base);
+              beangle.requireCss(module.css[j],beangle.staticBase);
             }
           }
           if(module.js){
@@ -1049,6 +1063,7 @@
 
   beangle.ready(beangle.iframe.adaptSelf);
   if(beangle.ajaxhistory)beangle.history.init();
+  beangle.getContextPath();
 
   //register as a module
   if ( typeof module === "object" && module && typeof module.exports === "object" ) {

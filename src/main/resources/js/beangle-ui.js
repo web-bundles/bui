@@ -47,7 +47,7 @@
     this.id=divId;
     this.separator="&nbsp;";
     this.bar.className="toolbar notprint";
-    var imagePath=beangle.base + "bui/"+beangle.version+"/icons/16x16/actions/";
+    var imagePath=beangle.staticBase + "bui/"+beangle.version+"/icons/16x16/actions/";
 
     this.setTitle=function(newTitle,imageName){
       if(!newTitle) return;

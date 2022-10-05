@@ -658,3 +658,13 @@ fieldset.listset .btn-sm{
   padding-top: 0.4rem;
   padding-bottom: 0.5rem;
 }
+
+div#topLoadingMessageZone{
+  position:absolute;
+  z-index : 1040;
+  top :0px;
+  right : 0px;
+  height :20px;
+  background-color:#F9EDBE;
+  padding :2px;
+}
