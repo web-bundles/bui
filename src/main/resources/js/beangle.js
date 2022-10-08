@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version="0.4.1";
+  beangle.version="0.4.2";
   /** extend function */
   beangle.extend= function(map){
     for(attr in map){
@@ -41,14 +41,15 @@
     if(beangle.contextPath) return beangle.contextPath;
     var
       baseElements = document.getElementsByTagName('base'),
-      baseElement = null,
       baseHref = '';
     if ( baseElements.length === 1 ) {
-      baseElement = baseElements[0];
-      baseHref = baseElement.href.replace(/[^\/]+$/,'');
+      baseHref = baseElements[0].href.replace(/[^\/]+$/,'');
+    }else{
+      baseHref =  document.location.origin+'/';
     }
     beangle.base=baseHref;
-    beangle.contextPath=baseHref.substring(baseHref.indexOf(document.domain)+document.domain.length)
+    var endPart = baseHref.substring(baseHref.indexOf(document.domain)+document.domain.length);
+    beangle.contextPath = endPart.substring(endPart.indexOf('/'))
     return beangle.contextPath;
   }
 
