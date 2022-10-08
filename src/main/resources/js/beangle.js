@@ -52,7 +52,7 @@
     return beangle.contextPath;
   }
 
-  beangle.ajaxhistory=(typeof History!="undefined" && typeof History.Adapter !="undefined");
+  beangle.ajaxhistory=(typeof History!="undefined");
 
   beangle.displayAjaxMessage=function() {
     var loadingMessage = "Loading...";
@@ -75,15 +75,13 @@
 
   //History--------------------------
   beangle.history = {
-    //最多存储20个状态
-    maxStates:20,
     isValidState:function(s){
-      return jQuery.type((s.data||{}).container)!="undefined" &&  jQuery.type((s.data||{}).content)!="undefined";
+      return (typeof s !== 'undefined') && jQuery.type((s.data||{}).container)!="undefined" && jQuery.type((s.data||{}).content)!="undefined";
     },
     busy:false,
     init : function(){
-      History.Adapter.bind(window,'statechange',function(){
-        var currState = History.getState(false,false)||{};
+      History.bind(window,'statechange',function(){
+        var currState = History.getState()||{};
         if(beangle.history.isValidState(currState)){
           if(jQuery(currState.data.container).length>0){
             jQuery(currState.data.container).html(currState.data.content);
@@ -110,7 +108,6 @@
             }
             beangle.history.busy=false;
           }
-          if(History.idToState.size>beangle.history.maxStates)History.reset();
         }
       });
     },
@@ -122,7 +119,7 @@
         type: "GET",dataType: "html",
         complete: function( jqXHR) {
           target="#"+target;
-          var state = History.getState(false,false)||{id:''}
+          var state = History.getState()||{id:''}
           var parentId = state.id
           if(jQuery(target).html().length>0){
             beangle.history.snapshot();
@@ -136,7 +133,7 @@
       });
     },
     snapshot:function(){
-      var state = History.getState(false,false)||{};
+      var state = History.getState()||{};
       if(state.data && state.data.content){
         var _t = [];
         jQuery(state.data.container +' .box:checked').each(function(index, e) {_t[_t.length] = e.value;});
@@ -156,10 +153,10 @@
     },
     convertUrl:function(url){
       if(url.startsWith(beangle.contextPath)){
-         return beangle.base+"?path=" + encodeURIComponent(url.replace(beangle.contextPath,"/"));
+         return beangle.base+"?_p=" + encodeURIComponent(url.replace(beangle.contextPath,"/"));
       }else if(url.startsWith(beangle.base)){
         var tail = url.substring(beangle.base.length);
-        return beangle.base+"?path=" + encodeURIComponent(tail)
+        return beangle.base+"?_p=" + encodeURIComponent(tail)
       }else{
         return url;
       }
@@ -175,7 +172,7 @@
 
       var handleResult = function(result){
         beangle.history.snapshot();
-        var state = History.getState(false,false)||{id:''}
+        var state = History.getState()||{id:''}
         var parentId = state.id
         History.pushState({content:result,container:target,parentId:parentId},"",beangle.history.convertUrl(action));
         beangle.hideAjaxMessage();
@@ -207,10 +204,10 @@
         if(!beangle.isAjaxTarget(target)){
           document.getElementById(target).src=url;
         }else{
-          if(beangle.ajaxhistory){
+          if(beangle.ajaxhistory && jQuery('#'+target).hasClass("ajax_container") ){
             beangle.history.Go(url,target);
           }else {
-            jQuery('#'+target).load(url,{});//using post ,hack ie8 get cache
+            jQuery.get(url,function(data){jQuery('#'+target).html(data)});
           }
         }
       }
@@ -282,8 +279,6 @@
           var msg = '[beangle] ' + message;
           if (window.console && window.console.log) {
             window.console.log(message);
-          }else if (window.opera && window.opera.postError) {
-            window.opera.postError(msg);
           }else{
             alert(msg);
           }
