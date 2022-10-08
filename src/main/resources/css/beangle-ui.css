@@ -22,11 +22,11 @@
  */
 
 .text-mini{
-  font-size:0.8125rem !important;
+  font-size:0.875rem !important;
 }
 
 /* grid */
-.grid{border-color:#006CB2;margin: 0px 0px 0px 0px ;font-size:0.8125rem !important;}
+.grid{border-color:#006CB2;margin: 0px 0px 0px 0px ;font-size:.875rem !important;}
 
 .grid-caption{padding: 5px;text-align: center;font-weight: bold;}
 
@@ -79,7 +79,7 @@
     height:1.4375rem;
     background-color: #c7dbff;
     border: 0px solid #006CB2;
-    font-size:0.8125rem !important;
+    font-size:0.875rem !important;
     overflow-x:auto;
 }
 
@@ -116,7 +116,7 @@
   height:1.4375rem;
   border-collapse:separate;
   display:block;
-  font-size:0.8125rem !important;
+  font-size:0.875rem !important;
 }
 
 .toolbar-icon{
@@ -222,7 +222,7 @@ table.search-widget{
     border-width:0px;
     margin:auto;
     width:100%;
-    font-size:0.8125rem !important;
+    font-size:0.875rem !important;
 }
 
 table.search-widget label{
@@ -307,7 +307,7 @@ td.search-item select{
     border-width:0px;
     border-color:#006CB2;
     background-color: #E1ECFF;
-    font-size:0.8125rem !important;
+    font-size:0.875rem !important;
     width:100%;
 }
 
@@ -327,7 +327,7 @@ td.search-item select{
     boxing-size:content-box;
 }
 div.search-footer .btn-sm{
-    font-size:0.8125rem !important;
+    font-size:0.875rem !important;
 }
 .search-header {
     display:none;
@@ -449,7 +449,6 @@ div.search-footer .btn-sm{
 
 /*详细信息页面*/
 table.infoTable {
-    font-size: 13px;
     vertical-align: middle;
     width:100%;
     table-layout:fixed;
@@ -506,7 +505,7 @@ table.settingTable td{
  * 1.5625rem=25px height
  */
 fieldset.listset {
-    font-size: .8125rem !important;
+    font-size: .875rem !important;
     line-height: normal;
     border-style: solid none none;
     margin: 0px 0px;
@@ -579,9 +578,6 @@ fieldset.listset li > input:focus {
     box-shadow: 0 0 10px #719ECE;
 }
 
-fieldset.listset .btn-sm{
-    font-size: .8125rem !important;
-}
 .icon-action{
     background-image: url(../icons/16x16/actions.png);
     display:inline-block;
@@ -636,7 +632,6 @@ fieldset.listset .btn-sm{
  */
 .nav-tabs-compact > li > a{
   padding: 5px 15px !important;
-  font-size:0.875rem;
 }
 
 .chosen-container{
@@ -646,7 +641,6 @@ fieldset.listset .btn-sm{
 .compact.table > tbody > tr > td {
   padding: 0.5rem;
   height:35px;
-  font-size:13px;
   line-height:1.42857;
   vertical-align: top;
   border-top: 1px solid #dee2e6;
