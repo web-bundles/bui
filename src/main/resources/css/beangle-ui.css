@@ -238,7 +238,7 @@ table.search-widget .search-item{
 }
 
 td.search-item input[type="text"]{
-    width:100px;
+    width: 6.25rem;
     border: 0.5px solid gray;
     height:1.5625rem;
     border-radius: .25rem;
@@ -252,7 +252,7 @@ td.search-item input:focus {
 }
 
 td.search-item select{
-    width:100px;
+    width:6.25rem;
     height:1.5625rem;
     font-size:0.75rem !important;
 }
@@ -271,7 +271,7 @@ td.search-item select{
     border-color:#006CB2;
     vertical-align: top;
     background-color: #E1ECFF;
-    width:170px;
+    width:11rem;
 }
 
 .index_content{
@@ -340,14 +340,14 @@ div.search-footer .btn-sm{
 }
 
 .search-item {
-    width: 170px;
+    width: 11rem;
     padding: 0px 6px 0px 0px;
     text-align: right;
 }
 
 
 .search-item input[type="text"]{
-    width:100px;
+    width:6.25rem;
     border: 0.5px solid gray;
     height:1.5625rem;
     border-radius: .25rem;
@@ -361,7 +361,7 @@ div.search-footer .btn-sm{
 }
 
 .search-item select{
-    width:100px;
+    width:6.25rem;
     height:1.5625rem;
     font-size:0.75rem !important;
 }
@@ -372,7 +372,7 @@ div.search-footer .btn-sm{
     flex-wrap:nowrap;
   }
   .search-panel{
-    width:170px;
+    width:11rem;
     flex-shrink:0;
     border-right-width:0.5px;
   }
@@ -384,7 +384,7 @@ div.search-footer .btn-sm{
     align-items:center;
   }
   .search-header {
-    width:169px;
+    width:calc(11rem - 1px);
     height:23px;
     border:solid;
     border-width: 0px 0px 0.5px 0px;
@@ -518,7 +518,7 @@ fieldset.listset li > label.title{
     margin: 0 0 8px;
     padding-right: 5px;
     text-align: right;
-    min-width: 100px;
+    min-width: 6.25rem;
     font-weight: bold;
 }
 
