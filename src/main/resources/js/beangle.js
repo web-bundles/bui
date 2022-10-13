@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version="0.4.2";
+  beangle.version="0.4.3";
   /** extend function */
   beangle.extend= function(map){
     for(attr in map){
@@ -153,13 +153,17 @@
       }
     },
     convertUrl:function(url){
-      if(url.startsWith(beangle.contextPath)){
-         return beangle.base+"?_p=" + encodeURIComponent(url.replace(beangle.contextPath,"/"));
-      }else if(url.startsWith(beangle.base)){
+      if(url.startsWith(beangle.base)){//http://localhost:8080/context/menu
         var tail = url.substring(beangle.base.length);
-        return beangle.base+"?_p=" + encodeURIComponent(tail)
+        return beangle.base+ "#/" + tail;
+      }else if(url.startsWith(beangle.contextPath)){//context/menu
+         var tail = url.substring(document.location.origin.length)
+         return beangle.base+ "#" + url.replace(beangle.contextPath,"/");
+       }else if(url.startsWith(document.location.origin)){//http://localhost:8080/other_context/menu
+        var tail = url.substring(document.location.origin.length)
+        return beangle.base+ "#" + tail;
       }else{
-        return url;
+        return beangle.base+ "#" + url;
       }
     },
     submit : function(form,action,target){
