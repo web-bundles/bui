@@ -17,15 +17,16 @@
  * along with Beangle.  If not, see <http://www.gnu.org/licenses/>.
  */
 (function( window, undefined ) {
+  "use strict";
   if(beangle) return;
   var beangle=function (){
     return true;
   };
 
-  beangle.version="0.4.3";
+  beangle.version="0.5.0";
   /** extend function */
   beangle.extend= function(map){
-    for(attr in map){
+    for(var attr in map){
       var attrs=attr.split("."),obj=beangle,i;
       for(i=0 ;i<attrs.length-1;i++){
         obj[attrs[i]]=obj[attrs[i]]||{};
@@ -33,55 +34,229 @@
       }
       obj[attrs[attrs.length-1]]=map[attr];
     }
-  }
+  };
   beangle.base=null;
   beangle.staticBase=null;
   beangle.contextPath=null;
   beangle.getContextPath=function(){
     if(beangle.contextPath) return beangle.contextPath;
     var
-      baseElements = document.getElementsByTagName('base'),
-      baseHref = '';
+      baseElements = document.getElementsByTagName("base"),
+      baseHref = "";
     if ( baseElements.length === 1 ) {
-      baseHref = baseElements[0].href.replace(/[^\/]+$/,'');
+      baseHref = baseElements[0].href.replace(/[^\/]+$/,"");
     }else{
-      baseHref =  document.location.origin+'/';
+      baseHref =  document.location.origin+"/";
     }
     beangle.base=baseHref;
     var endPart = baseHref.substring(baseHref.indexOf(document.domain)+document.domain.length);
-    beangle.contextPath = endPart.substring(endPart.indexOf('/'))
+    beangle.contextPath = endPart.substring(endPart.indexOf("/"));
     return beangle.contextPath;
-  }
-
-  beangle.ajaxhistory=(typeof History!="undefined");
+  };
 
   beangle.displayAjaxMessage=function() {
     var loadingMessage = "Loading...";
-    var mz = document.getElementById('topLoadingMessageZone');
+    var mz = document.getElementById("topLoadingMessageZone");
     if (!mz) {
-        var mz = document.createElement('div');
-        mz.setAttribute('id', 'topLoadingMessageZone');
+        mz = document.createElement("div");
+        mz.setAttribute("id", "topLoadingMessageZone");
         document.body.appendChild(mz);
         var text = document.createTextNode(loadingMessage);
         mz.appendChild(text);
     }else {
         mz.innerHTML=loadingMessage;
-        mz.style.display = 'block';
+        mz.style.display = "block";
     }
   };
   beangle.hideAjaxMessage=function(){
-      var mz = document.getElementById('topLoadingMessageZone');
-      if(mz)mz.style.display='none';
+      var mz = document.getElementById("topLoadingMessageZone");
+      if(mz)mz.style.display="none";
   };
 
   //History--------------------------
   beangle.history = {
     isValidState:function(s){
-      return (typeof s !== 'undefined') && jQuery.type((s.data||{}).container)!="undefined" && jQuery.type((s.data||{}).content)!="undefined";
+      return (typeof s !== "undefined") && jQuery.type((s.data||{}).container)!="undefined" && jQuery.type((s.data||{}).content)!="undefined";
     },
     busy:false,
     init : function(){
-      History.bind(window,'statechange',function(){
+      // build Public History Object
+      var History = window.History = window.History||{};
+      var history = window.history; // Old History Object
+
+      // Initialise
+      History.init = function(options){
+        if ( typeof History.init.initialized !== "undefined" ) {
+          return false;
+        }
+        History.init.initialized = true;
+        History.options = options||{};
+        History.options.initialTitle=History.options.initialTitle||document.title;
+        //最多存储20个状态
+        History.options.maxStates = History.options.maxStates || 50;
+        History.options.minStates = History.options.minStates || 20;
+        History.extractEventData = function(key,event,extra){
+          return (event && event.originalEvent && event.originalEvent[key]) || (extra && extra[key]) || undefined;
+        };
+        /**
+         * Ensures that we have an absolute URL and not a relative URL
+         */
+        History.getFullUrl = function(url){
+          var fullUrl = url;
+          var firstChar = url.substring(0,1);
+          if ( /[a-z]+\:\/\//.test(url) ) {
+          }else if ( firstChar === "/" ) {
+            fullUrl = document.location.origin+"/"+url.replace(/^\/+/,"");
+          }else {
+            fullUrl = beangle.base+url.replace(/^(\.\/)+/,"");
+          }
+          return fullUrl.replace(/\#$/,"");
+        };
+
+        History.getLocationHref = function(doc) {
+          doc = doc || document;
+          return doc.location.href;
+        };
+
+        History.idToState = new Map();
+        History.urlToId = new Map();
+        History.ids = [];
+        History.lastState = {};
+
+        History.getState = function(create){
+          var st = History.getLastState();
+          if ( typeof create === "undefined" ) { create = false; }
+          if ( !st && create ){
+            st = History.createState();
+          }
+          return st;
+        };
+
+        History.genStateId = function(newState){
+          var id;
+          while ( true ) {
+            id = Date.now() + String(Math.random()).replace(/\D/g,"");
+            if ( typeof History.idToState.get(id) === "undefined") {
+              break;
+            }
+          }
+          return id;
+        };
+
+        History.createState = function(data,title,url){
+          var state = {};
+          if ( !data || (typeof data !== "object") ) {
+            data = {};
+          }
+          state.data = data;
+          state.url = History.getFullUrl(url?url:(History.getLocationHref()));
+          state.id = History.genStateId(state);
+          History.ids.push(state.id);
+          History.idToState.set(state.id,state);
+          History.urlToId.set(state.url,state.id);
+          return state;
+        };
+
+        History.getStateById = function(id){
+          id = String(id);
+          return History.idToState.get(id) || undefined;
+        };
+
+        History.extractState = function(url,create){
+          var st = null;
+          var id = History.urlToId.get(url)||false;
+          create = create||false;
+          if (id) {
+            st = History.getStateById(id);
+          }
+          if (!st && create) {
+            st = History.createState(null,null,url);
+          }
+          return st;
+        };
+
+        History.getLastState = function(){
+          return History.lastState||undefined;
+        };
+
+        History.isLastState = function(newState){
+          if ( History.lastState ) {
+            return (newState.id === History.lastState.id);
+          }else{
+            return false;
+          }
+        };
+
+        History.saveState = function(newState){
+          History.lastState = newState;
+        };
+
+        History.onPopState = function(event,extra){
+          var stateId = false;
+          var newState = false;
+          stateId = History.extractEventData("state",event,extra) || false;
+          if ( stateId ) {
+            newState = History.getStateById(stateId);
+          }else if ( History.expectedStateId ) {
+            newState = History.getStateById(History.expectedStateId);
+          }else {
+            newState = History.extractState(History.getLocationHref());
+          }
+          if (!newState) {
+            newState = History.createState(null,null,History.getLocationHref());
+          }
+
+          History.expectedStateId = false;
+          if ( History.isLastState(newState) ){
+            return false;
+          }
+          History.saveState(newState);
+          jQuery(window).trigger("statechange");
+          return true;
+        };
+        jQuery(window).bind("popstate",History.onPopState);
+
+        History.pushState = function(data,title,url){
+          var newState = History.createState(data,title,url);
+          if(History.ids.length > History.options.maxStates){
+            History.shrink();
+          }
+          if (!History.isLastState(newState) ) {
+            History.expectedStateId = newState.id;
+            history.pushState(newState.id,newState.title,newState.url);
+            jQuery(window).trigger("popstate");
+          }
+          return true;
+        };
+
+        History.replaceState = function(data,title,url){
+          var newState = History.createState(data,title,url);
+          if (!History.isLastState(newState) ) {
+            History.expectedStateId = newState.id;
+            history.replaceState(newState.id,newState.title,newState.url);
+            jQuery(window).trigger("popstate");
+          }
+          return true;
+        };
+        History.shrink = function(){
+          while(History.ids.length > History.options.minStates){
+             var oldId= History.ids.shift();
+             var ss = History.idToState.get(oldId);
+             if(ss){
+               History.idToState.delete(oldId);
+               History.urlToId.delete(ss.url);
+             }
+          }
+        };
+        History.saveState(History.extractState(History.getLocationHref(),true));
+
+        jQuery(window).bind("hashchange",function(){
+          jQuery(window).trigger("popstate");
+        });
+      }; // History.init
+
+      History.init();
+      jQuery(window).bind("statechange",function(){
         var currState = History.getState()||{};
         if(beangle.history.isValidState(currState)){
           if(jQuery(currState.data.container).length>0){
@@ -120,8 +295,8 @@
         type: "GET",dataType: "html",
         complete: function( jqXHR) {
           target="#"+target;
-          var state = History.getState()||{id:''}
-          var parentId = state.id
+          var state = History.getState()||{id:""};
+          var parentId = state.id;
           if(jQuery(target).html().length>0){
             beangle.history.snapshot();
             History.pushState({content:jqXHR.responseText,container:target,parentId:parentId},"",beangle.history.convertUrl(url));
@@ -137,14 +312,14 @@
       var state = History.getState()||{};
       if(state.data && state.data.content){
         var _t = [];
-        jQuery(state.data.container +' .box:checked').each(function(index, e) {_t[_t.length] = e.value;});
+        jQuery(state.data.container +" .box:checked").each(function(index, e) {_t[_t.length] = e.value;});
         if(_t.length>0) state.data.boxes = _t;
       }
     },
     applyState:function(state){
       if(state.data.boxes){
         jQuery(state.data.boxes).each(function(index, value) {
-          jQuery(state.data.container +' .box[value=' + value + ']').prop('checked', true);
+          jQuery(state.data.container +" .box[value=" + value + "]").prop("checked", true);
         });
       }
       if(typeof afterApplyState=="function"){
@@ -153,14 +328,15 @@
       }
     },
     convertUrl:function(url){
+      var tail=null;
       if(url.startsWith(beangle.base)){//http://localhost:8080/context/menu
-        var tail = url.substring(beangle.base.length);
+        tail = url.substring(beangle.base.length);
         return beangle.base+ "#/" + tail;
       }else if(url.startsWith(beangle.contextPath)){//context/menu
-         var tail = url.substring(document.location.origin.length)
-         return beangle.base+ "#" + url.replace(beangle.contextPath,"/");
-       }else if(url.startsWith(document.location.origin)){//http://localhost:8080/other_context/menu
-        var tail = url.substring(document.location.origin.length)
+        tail = url.substring(document.location.origin.length);
+        return beangle.base+ "#" + url.replace(beangle.contextPath,"/");
+      }else if(url.startsWith(document.location.origin)){//http://localhost:8080/other_context/menu
+        tail = url.substring(document.location.origin.length);
         return beangle.base+ "#" + tail;
       }else{
         return beangle.base+ "#" + url;
@@ -177,12 +353,12 @@
 
       var handleResult = function(result){
         beangle.history.snapshot();
-        var state = History.getState()||{id:''}
-        var parentId = state.id
+        var state = History.getState()||{id:""};
+        var parentId = state.id;
         History.pushState({content:result,container:target,parentId:parentId},"",beangle.history.convertUrl(action));
         beangle.hideAjaxMessage();
         return false;
-      }
+      };
       jQuery(form).ajaxForm({success:handleResult,error:handleResult,url:action});
       jQuery(form).submit();
     }
@@ -209,10 +385,10 @@
         if(!beangle.isAjaxTarget(target)){
           document.getElementById(target).src=url;
         }else{
-          if(beangle.ajaxhistory && jQuery('#'+target).hasClass("ajax_container") ){
+          if(jQuery("#"+target).hasClass("ajax_container") ){
             beangle.history.Go(url,target);
           }else {
-            jQuery.get(url,function(data){jQuery('#'+target).html(data)});
+            jQuery.get(url,function(data){jQuery("#"+target).html(data);});
           }
         }
       }
@@ -226,9 +402,9 @@
       if(target==""||target=="_blank"||target=="_self"||target=="_parent"||target=="_top"){
         return false;
       }
-      targetEle=document.getElementById(target);
+      var targetEle=document.getElementById(target);
       if(!targetEle) return false;
-      tagName=targetEle.tagName.toLowerCase();
+      var tagName=targetEle.tagName.toLowerCase();
       if(tagName=="iframe" || tagName=="object"){
         return false;
       }
@@ -281,7 +457,7 @@
       level : 1,
       debug : function(message){
         if(beangle.logger.level<=0){
-          var msg = '[beangle] ' + message;
+          var msg = "[beangle] " + message;
           if (window.console && window.console.log) {
             window.console.log(message);
           }else{
@@ -412,7 +588,7 @@
           }
           if((totalHeight>0) &&  totalHeight> myHeight){
             targWin.style.height = totalHeight+"px";
-            beangle.logger.debug('adapt frame:'+targObj.name+" height "+targWin.style.height);
+            beangle.logger.debug("adapt frame:"+targObj.name+" height "+targWin.style.height);
           }
         }
         beangle.iframe.adapt(targObj.parent);
@@ -424,8 +600,8 @@
     form:{
       submit : function (myForm,action,target,onsubmit,ajax,noHistory){
         var submitTarget, rs,origin_target, origin_action;
-        if((typeof myForm)=='string') myForm = document.getElementById(myForm);
-        //First native onsubmit will benefit to user's onsubmit hook on data validation.
+        if((typeof myForm)=="string") myForm = document.getElementById(myForm);
+        //First native onsubmit will benefit to user"s onsubmit hook on data validation.
         //1.native onsubmit
         if(myForm.onsubmit){
           rs=null;
@@ -454,15 +630,16 @@
         if(action==null) action=myForm.action;
 
         if(action.indexOf("http://")==0) action=action.substring(action.indexOf("/",7));
+        if(action.indexOf("https://")==0) action=action.substring(action.indexOf("/",8));
 
         if(null==ajax || ajax) ajax=beangle.isAjaxTarget(submitTarget);
 
         // 4. fire
         if(ajax){
-          if(null==myForm.id||''==myForm.id){
+          if(null==myForm.id||""==myForm.id){
             myForm.setAttribute("id",myForm.name);
           }
-          if(!noHistory && !jQuery("input:file",myForm).length && beangle.ajaxhistory){
+          if(!noHistory && !jQuery("input:file",myForm).length){
             beangle.history.submit(myForm.id,action,submitTarget);
           }else{
             beangle.form.ajaxSubmit(myForm.id,action,submitTarget);
@@ -506,12 +683,12 @@
       ajaxSubmit : function(formId,action,target){
         if(!action) action=document.getElementById(formId).action;
         require(["jquery-form"],function(){
-          jQuery('#'+formId).ajaxForm({
-            success:function(result) {try{jQuery('#'+target).html(result);}catch(e){alert(e)}},
-            error:function (response) {try{jQuery('#'+target).html(response.responseText);}catch(e){alert(e)}},
+          jQuery("#"+formId).ajaxForm({
+            success:function(result) {try{jQuery("#"+target).html(result);}catch(e){alert(e);}},
+            error:function (response) {try{jQuery("#"+target).html(response.responseText);}catch(e){alert(e);}},
             url:action
           });
-          jQuery('#'+formId).submit();
+          jQuery("#"+formId).submit();
         });
       },
       /**
@@ -538,7 +715,7 @@
         }else{
           action=form.action;
         }
-        beangle.form.addInput(form,(isMulti?(id+'s'):id),selectId,"hidden");
+        beangle.form.addInput(form,(isMulti?(id+"s"):id),selectId,"hidden");
         if(null!=promptMsg){
           if(!confirm(promptMsg))return;
         }
@@ -561,7 +738,7 @@
           form[name].value=value;
         }else{
           if(null==type) type="hidden";
-          var input = document.createElement('input');
+          var input = document.createElement("input");
           input.setAttribute("name",name);
           input.setAttribute("value",value);
           input.setAttribute("type",type);
@@ -575,7 +752,7 @@
         }
         if(null==type) type="hidden";
         for(i=0;i<value.length;i++){
-          var input = document.createElement('input');
+          var input = document.createElement("input");
           input.setAttribute("name",name);
           input.setAttribute("value",value[i]);
           input.setAttribute("type",type);
@@ -605,9 +782,9 @@
        * 将其作为一个参数加入到to表单中。
        */
       setSearchParams : function (from,to,prefix){
-        beangle.form.addInput(to,'params',"");
+        beangle.form.addInput(to,"params","");
         var params=beangle.form.getInputParams(from,prefix,false);
-        beangle.form.addInput(to,'params',params);
+        beangle.form.addInput(to,"params",params);
       },
 
       addHiddens : function (form,paramSeq){
@@ -655,7 +832,7 @@
               if(elems[i].name.indexOf(prefix)==0&&elems[i].name.indexOf(".")>1){
                 if((elems[i].type=="radio" ||elems[i].type=="checkbox")&& !elems[i].checked)
                   continue;
-                if(elems[i].value.indexOf('&')!=-1){
+                if(elems[i].value.indexOf("&")!=-1){
                   params+="&" + elems[i].name + "=" + escape(elems[i].value);
                 }else{
                   params+="&" + elems[i].name + "=" + elems[i].value;
@@ -664,7 +841,7 @@
             }else{
               if((elems[i].type=="radio" ||elems[i].type=="checkbox")&& !elems[i].checked)
                 continue;
-              if(elems[i].value.indexOf('&')!=-1){
+              if(elems[i].value.indexOf("&")!=-1){
                 params+="&" + elems[i].name + "=" + escape(elems[i].value);
               }else{
                 params+="&" + elems[i].name + "=" + elems[i].value;
@@ -776,16 +953,44 @@
        * 设定选择框中的选择项(单项)
        */
       setSelected : function (select,idSeq){
-        if(idSeq.indexOf(',')!=0){
+        if(idSeq.indexOf(",")!=0){
           idSeq=","+idSeq;
         }
-        if(idSeq.lastIndexOf(',')!=idSeq.length-1){
+        if(idSeq.lastIndexOf(",")!=idSeq.length-1){
           idSeq=idSeq+",";
         }
         for(var i=0;i<select.options.length;i++){
-          if(idSeq.indexOf(','+select.options[i].value+',')!=-1)
+          if(idSeq.indexOf(","+select.options[i].value+",")!=-1)
             select.options[i].selected=true;
         }
+      },
+      fillin:function(id,obj,value,keyName,valueName,chosenMin){
+        var is_restapi = Array.isArray(obj);
+        var datas = is_restapi?obj:obj.datas;
+        var select = $("#"+id);
+        var cnt=0;
+        var rows=[]
+        for(var i in datas){
+          cnt += 1;
+          var data = datas[i];
+          var k,v;
+          if(Array.isArray(data)){
+            k=data[0],v=data[1];
+          }else{
+            k = data[keyName];
+            v = is_restapi?data[valueName]:data.attributes[valueName];
+            rows.push([k,v]);
+          }
+          select.append("<option value='"+k+"' title='"+v+"'>"+v+"</option>");
+        }
+        if(value) select.val(value);
+        if(!chosenMin) chosenMin=30;
+        if( cnt >= chosenMin){
+          beangle.load(["chosen"],function(){
+            $("#"+id).chosen({placeholder_text_single:"...",no_results_text: "没有找到结果！",search_contains:true,allow_single_deselect:true});
+          });
+        }
+        if(rows.length) return rows;
       }
     }
   });
@@ -794,21 +999,46 @@
   beangle.extend({
     cookie:{
       get : function (cookieName) {
-        var cookieString = document.cookie , start = cookieString.indexOf(cookieName + '='), end;
-        // 加上等号的原因是避免在某些 Cookie 的值里有
-        // 与 cookieName 一样的字符串。
-        if (start == -1) // 找不到
-        return null;
+        var cookieString = document.cookie , start = cookieString.indexOf(cookieName + "="), end;
+        if (start == -1) return null;
         start += cookieName.length + 1;
-        end = cookieString.indexOf(';', start);
+        end = cookieString.indexOf(";", start);
         if (end == -1) return unescape(cookieString.substring(start));
         return unescape(cookieString.substring(start, end));
       },
-      set : function (name, value, path){
+      set : function (name, value, path,days){
         if(null==path) path="/";
+        if(!days) days=30;
         var expires=new Date();
-        expires.setTime(expires.getTime()+(86400*30));
-        document.cookie=name+"="+value+"; expires="+expires.toGMTString()+"; path="+path;
+        expires.setTime(expires.getTime()+(86400*days));//30days
+        document.cookie=name+"="+value+"; expires="+expires.toGMTString()+"; path="+path+";SameSite=Strict";
+      },
+      remove : function(name, path, domain ) {
+        if( beangle.cookie.get( name ) ) {
+          document.cookie = name + "=" +
+            (path? (";path="+path):"")+
+            (domain?(";domain="+domain):"") +
+            ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+        }
+      }
+    }
+  });
+  // data----------------------------------------------------------------------------------------
+  beangle.extend({
+    data:{
+      toCsv:function (rows){
+        var datas=[]
+        for (var i = 0; i < rows.length; i++) {
+          datas.push(rows[i].join(","));
+        }
+        return datas.join(";");
+      },
+      parseCsv : function (str){
+        var rows = str.split(";");
+        for (var i = 0; i < rows.length; i++) {
+          rows[i] = rows[i].split(",");
+        }
+        return rows;
       }
     }
   });
@@ -818,32 +1048,32 @@
     this.actionurl=action;
     this.target=target;
     this.paramMap={};
-    this.params = function(){ return this.paramMap;}
+    this.params = function(){ return this.paramMap;};
 
     this.pageInfo = function(pageIndex,pageSize,totalItems){
       this.pageIndex=pageIndex;
       this.pageSize=pageSize;
       this.totalItems=totalItems;
       if(null!=totalItems && null!=pageSize && null!=pageIndex){
-        quotient=Math.floor(totalItems/pageSize);
+        var quotient=Math.floor(totalItems/pageSize);
         this.totalPages = (0 == totalItems%pageSize) ? quotient : (quotient + 1);
         this.startNo=(pageIndex-1)*pageSize+1;
         this.endNo=((this.startNo+pageSize-1)<=totalItems)?(this.startNo+pageSize-1):totalItems;
       }else{
         this.totalPages=1;
       }
-    }
+    };
 
     this.pageInfo(pageIndex,pageSize,totalItems);
 
     this.action=function(actionurl){
       this.actionurl=actionurl;
       return this;
-    }
+    };
     this.orderBy=function(newstring){
       this.orderby=newstring;
       return this;
-    }
+    };
 
     this.setTarget=function(givenTarget,elemId){
       if(givenTarget){
@@ -852,10 +1082,10 @@
         this.target=beangle.findTarget(document.getElementById(elemId));
       }
       return this;
-    }
+    };
 
     this.getForm = function(){
-      myForm=document.getElementById(this.formid);
+      var myForm=document.getElementById(this.formid);
       if(null==myForm){
         myForm=document.createElement("form");
         myForm.setAttribute("id",this.formid);
@@ -868,11 +1098,12 @@
         }
       }
       return myForm;
-    }
+    };
+
     this.addParams = function(paramSeq){
       beangle.assert.notNull(paramSeq,"paramSeq for addHiddens must not be null");
       this.paramstr=paramSeq;
-      var paramArray = paramSeq.split("&"), i, name, value;
+      var paramArray = paramSeq.split("&"), i, name, value,oneParam;
       for(i=0;i<paramArray.length;i++){
         oneParam=paramArray[i];
         if(oneParam!=""){
@@ -882,7 +1113,7 @@
         }
       }
       return this;
-    }
+    };
     // 检查分页参数
     this.checkPageParams = function (pageIndex, pageSize,orderBy){
       if(null!=pageIndex){
@@ -895,7 +1126,7 @@
             pageIndex=this.totalPages;
           }
         }
-        this.paramMap['pageIndex']=pageIndex;
+        this.paramMap["pageIndex"]=pageIndex;
       }
       if(null!=pageSize){
         if(!/^[1-9]\d*$/.test(pageSize)){
@@ -908,7 +1139,7 @@
         this.paramMap["orderBy"]=orderBy;
       }
       return true;
-    }
+    };
     this.goPage = function (pageIndex,pageSize,orderBy){
       var myForm=this.getForm(), key, value;
       if(this.checkPageParams(pageIndex,pageSize,orderBy)){
@@ -922,7 +1153,7 @@
           myForm.submit();
         }
       }
-    }
+    };
   }
 
   beangle.extend({
@@ -938,56 +1169,26 @@
     }
   };
 
-  beangle.getCookie = function(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-      var c = ca[i];
-      while (c.charAt(0)==' ') c = c.substring(1,c.length);
-      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
-  };
-
-  beangle.createCookie =function(name,value,days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime()+(days*24*60*60*1000));
-        var expires = "; expires="+date.toGMTString();
-    }
-    else var expires = "";
-    document.cookie = name+"="+value+expires+"; path=/;SameSite=Strict";
-  };
-
-  beangle.deleteCookie =function(name, path, domain ) {
-    if( getCookie( name ) ) {
-      document.cookie = name + "=" +
-        ((path) ? ";path="+path:"")+
-        ((domain)?";domain="+domain:"") +
-        ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
-    }
-  };
-
   beangle.displayFileInfo=function(domId,file,maxSize){
     var maxStr="";
     if(maxSize >= 1024*1024){
-      maxStr = (maxSize/1024.0/1024.0).toFixed(1)+'MB';
+      maxStr = (maxSize/1024.0/1024.0).toFixed(1)+"MB";
     }else{
-      maxStr = (maxSize/1024.0).toFixed(1)+'KB';
+      maxStr = (maxSize/1024.0).toFixed(1)+"KB";
     }
-    jQuery('#'+domId).attr("title","最大"+maxStr);
+    jQuery("#"+domId).attr("title","最大"+maxStr);
     var sizeStr="";
     if(file.size >= 1024*1024){
-      sizeStr = (file.size/1024.0/1024.0).toFixed(1)+'MB';
+      sizeStr = (file.size/1024.0/1024.0).toFixed(1)+"MB";
     }else{
-      sizeStr = (file.size/1024.0).toFixed(1)+'KB';
+      sizeStr = (file.size/1024.0).toFixed(1)+"KB";
     }
     if(file.size > maxSize){
-      jQuery('#'+domId).css('color','red');
-      jQuery('#'+domId).html("大小"+sizeStr+",超过"+maxStr);
+      jQuery("#"+domId).css("color","red");
+      jQuery("#"+domId).html("大小"+sizeStr+",超过"+maxStr);
     }else{
-      jQuery('#'+domId).css('color','black');
-      jQuery('#'+domId).html("大小"+sizeStr+",最大"+maxStr);
+      jQuery("#"+domId).css("color","black");
+      jQuery("#"+domId).html("大小"+sizeStr+",最大"+maxStr);
     }
   };
 
@@ -1007,13 +1208,13 @@
       }
       if(registed){
         var paths= {};
-        var shim={}
+        var shim={};
         for(var m in beangle.modules){
-          var bm=beangle.modules[m]
+          var bm=beangle.modules[m];
           if(bm.js){
             paths[m]=bm.js.substring(0,bm.js.length-3);
             if(bm.deps){
-              shim[m]=bm.deps
+              shim[m]=bm.deps;
             }
           }
         }
@@ -1021,7 +1222,7 @@
       }
     },
     load:function(names,callBack){
-      var requireModules=[]
+      var requireModules=[];
       for(var i=0;i<names.length;i++){
         var module= beangle.modules[names[i]];
         if(module){
@@ -1031,12 +1232,12 @@
             }
           }
           if(module.js){
-            requireModules.push(names[i])
+            requireModules.push(names[i]);
           }
         }
       }
       if(requireModules.length>0){
-        require(requireModules,callBack)
+        require(requireModules,callBack);
       }else if(callBack){
         try{
           callBack();
@@ -1072,8 +1273,8 @@
   });
 
   beangle.ready(beangle.iframe.adaptSelf);
-  if(beangle.ajaxhistory)beangle.history.init();
   beangle.getContextPath();
+  beangle.history.init();
 
   //register as a module
   if ( typeof module === "object" && module && typeof module.exports === "object" ) {
