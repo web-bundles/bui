@@ -5,136 +5,136 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 (function(window,undefined){
-	"use strict";
-	var
-		document = window.document, // Make sure we are using the correct document
-		alert = window.alert,
-		History = window.History = window.History||{}, // Public History Object
-		history = window.history; // Old History Object
+  "use strict";
+  var
+    document = window.document, // Make sure we are using the correct document
+    alert = window.alert,
+    History = window.History = window.History||{}, // Public History Object
+    history = window.history; // Old History Object
 
-	History.bind = function(el,event,callback){
+  History.bind = function(el,event,callback){
     jQuery(el).bind(event,callback);
-	};
-	History.trigger = function(el,event,extra){
+  };
+  History.trigger = function(el,event,extra){
     jQuery(el).trigger(event,extra);
-	};
-	History.extractEventData = function(key,event,extra){
+  };
+  History.extractEventData = function(key,event,extra){
     return (event && event.originalEvent && event.originalEvent[key]) || (extra && extra[key]) || undefined;
   };
 
-	// Initialise
-	History.init = function(options){
-		if ( typeof History.init.initialized !== 'undefined' ) {
-			return false;
-		}else {
-			History.init.initialized = true;
-		}
-		History.options = options||{}
-		History.options.initialTitle = History.options.initialTitle || document.title;
+  // Initialise
+  History.init = function(options){
+    if ( typeof History.init.initialized !== 'undefined' ) {
+      return false;
+    }else {
+      History.init.initialized = true;
+    }
+    History.options = options||{}
+    History.options.initialTitle = History.options.initialTitle || document.title;
     //最多存储20个状态
-		History.options.maxStates = History.options.maxStates || 50;
-		History.options.minStates = History.options.minStates || 20;
+    History.options.maxStates = History.options.maxStates || 50;
+    History.options.minStates = History.options.minStates || 20;
 
-		History.getRootUrl = function(){
-			return document.location.origin+'/';
-		};
+    History.getRootUrl = function(){
+      return document.location.origin+'/';
+    };
 
-		History.getBaseUrl = function(){
-			var
-				baseElements = document.getElementsByTagName('base'),
-				baseElement = null,
-				baseHref = '';
+    History.getBaseUrl = function(){
+      var
+        baseElements = document.getElementsByTagName('base'),
+        baseElement = null,
+        baseHref = '';
 
-			if ( baseElements.length === 1 ) {
-				baseElement = baseElements[0];
-				baseHref = baseElement.href.replace(/[^\/]+$/,'');
-			}
-			baseHref = baseHref.replace(/\/+$/,'');
-			return baseHref?(baseHref + '/' ):History.getRootUrl();
-		};
+      if ( baseElements.length === 1 ) {
+        baseElement = baseElements[0];
+        baseHref = baseElement.href.replace(/[^\/]+$/,'');
+      }
+      baseHref = baseHref.replace(/\/+$/,'');
+      return baseHref?(baseHref + '/' ):History.getRootUrl();
+    };
 
     History.baseUrl = History.getBaseUrl();
-		/**
-		 * Ensures that we have an absolute URL and not a relative URL
-		 */
-		History.getFullUrl = function(url){
-			var fullUrl = url, firstChar = url.substring(0,1);
-			if ( /[a-z]+\:\/\//.test(url) ) {
-			}else if ( firstChar === '/' ) {
-				fullUrl = History.getRootUrl()+url.replace(/^\/+/,'');
-			}else {
+    /**
+     * Ensures that we have an absolute URL and not a relative URL
+     */
+    History.getFullUrl = function(url){
+      var fullUrl = url, firstChar = url.substring(0,1);
+      if ( /[a-z]+\:\/\//.test(url) ) {
+      }else if ( firstChar === '/' ) {
+        fullUrl = History.getRootUrl()+url.replace(/^\/+/,'');
+      }else {
         fullUrl = History.baseUrl+url.replace(/^(\.\/)+/,'');
-			}
-			return fullUrl.replace(/\#$/,'');
-		};
+      }
+      return fullUrl.replace(/\#$/,'');
+    };
 
-		History.getLocationHref = function(doc) {
-			doc = doc || document;
-			return doc.location.href;
-		};
+    History.getLocationHref = function(doc) {
+      doc = doc || document;
+      return doc.location.href;
+    };
 
-		History.idToState = new Map();
-		History.urlToId = new Map();
-		History.ids = [];
-		History.lastState = {};
+    History.idToState = new Map();
+    History.urlToId = new Map();
+    History.ids = [];
+    History.lastState = {};
 
-		History.getState = function(create){
-			if ( typeof create === 'undefined' ) { create = false; }
-			var State = History.getLastState();
-			if ( !State && create ) State = History.createState();
-			return State;
-		};
+    History.getState = function(create){
+      if ( typeof create === 'undefined' ) { create = false; }
+      var State = History.getLastState();
+      if ( !State && create ) State = History.createState();
+      return State;
+    };
 
-		History.genStateId = function(newState){
-		  var id;
+    History.genStateId = function(newState){
+      var id;
       while ( true ) {
         id = (new Date()).getTime() + String(Math.random()).replace(/\D/g,'');
         if ( typeof History.idToState.get(id) === 'undefined') break;
       }
-			return id;
-		};
+      return id;
+    };
 
-		History.createState = function(data,title,url){
-		  if ( !data || (typeof data !== 'object') ) data = {};
-			var state = {}
-			state.data = data;
+    History.createState = function(data,title,url){
+      if ( !data || (typeof data !== 'object') ) data = {};
+      var state = {}
+      state.data = data;
       state.url = History.getFullUrl(url?url:(History.getLocationHref()));
       state.id = History.genStateId(state);
       History.ids.push(state.id);
       History.idToState.set(state.id,state);
       History.urlToId.set(state.url,state.id);
-			return state;
-		};
+      return state;
+    };
 
-		History.getStateById = function(id){
-			id = String(id);
-			return History.idToState.get(id) || undefined;
-		};
+    History.getStateById = function(id){
+      id = String(id);
+      return History.idToState.get(id) || undefined;
+    };
 
-		History.extractState = function(url,create){
-			var State = null, id;
-			create = create||false;
+    History.extractState = function(url,create){
+      var State = null, id;
+      create = create||false;
       id = History.urlToId.get(url)||false;
       if (id) State = History.getStateById(id);
       if (!State && create) State = History.createState(null,null,url);
-			return State;
-		};
+      return State;
+    };
 
-		History.getLastState = function(){
-			return History.lastState||undefined;
-		};
+    History.getLastState = function(){
+      return History.lastState||undefined;
+    };
 
-		History.isLastState = function(newState){
-			if ( History.lastState ) {
-				return (newState.id === History.lastState.id);
-			}else{
-			  return false;
-			}
-		};
+    History.isLastState = function(newState){
+      if ( History.lastState ) {
+        return (newState.id === History.lastState.id);
+      }else{
+        return false;
+      }
+    };
 
-		History.saveState = function(newState){
-			History.lastState = newState;
-		};
+    History.saveState = function(newState){
+      History.lastState = newState;
+    };
 
     History.onPopState = function(event,extra){
       var stateId = false, newState = false;
@@ -188,11 +188,11 @@
          }
       }
     };
-		History.saveState(History.extractState(History.getLocationHref(),true));
+    History.saveState(History.extractState(History.getLocationHref(),true));
     History.bind(window,'hashchange',function(){
       History.trigger(window,'popstate');
     });
-	}; // History.init
+  }; // History.init
 
-	History.init();
+  History.init();
 })(window);
