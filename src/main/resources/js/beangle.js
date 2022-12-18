@@ -23,7 +23,7 @@
     return true;
   };
 
-  beangle.version="0.5.0";
+  beangle.version="0.5.1";
   /** extend function */
   beangle.extend= function(map){
     for(var attr in map){
@@ -976,6 +976,7 @@
           var k,v;
           if(Array.isArray(data)){
             k=data[0],v=data[1];
+            rows=datas;
           }else{
             k = data[keyName];
             v = is_restapi?data[valueName]:data.attributes[valueName];
@@ -990,7 +991,7 @@
             $("#"+id).chosen({placeholder_text_single:"...",no_results_text: "没有找到结果！",search_contains:true,allow_single_deselect:true});
           });
         }
-        if(rows.length) return rows;
+        return rows;
       }
     }
   });
@@ -1027,18 +1028,26 @@
   beangle.extend({
     data:{
       toCsv:function (rows){
-        var datas=[]
-        for (var i = 0; i < rows.length; i++) {
-          datas.push(rows[i].join(","));
+        if(rows && rows.length>0){
+          var datas=[]
+          for (var i = 0; i < rows.length; i++) {
+            datas.push(rows[i].join(","));
+          }
+          return datas.join(";");
+        }else{
+          return "";
         }
-        return datas.join(";");
       },
       parseCsv : function (str){
-        var rows = str.split(";");
-        for (var i = 0; i < rows.length; i++) {
-          rows[i] = rows[i].split(",");
+        if(str && str.length>0){
+          var rows = str.split(";");
+          for (var i = 0; i < rows.length; i++) {
+            rows[i] = rows[i].split(",");
+          }
+          return rows;
+        }else{
+          return [];
         }
-        return rows;
       }
     }
   });
