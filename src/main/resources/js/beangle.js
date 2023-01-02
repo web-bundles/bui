@@ -17,13 +17,12 @@
  * along with Beangle.  If not, see <http://www.gnu.org/licenses/>.
  */
 (function( window, undefined ) {
-  "use strict";
   if(beangle) return;
   var beangle=function (){
     return true;
   };
 
-  beangle.version="0.5.1";
+  beangle.version="0.5.2";
   /** extend function */
   beangle.extend= function(map){
     for(var attr in map){
