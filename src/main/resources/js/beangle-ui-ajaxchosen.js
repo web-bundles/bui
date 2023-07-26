@@ -6,6 +6,7 @@
       defaultOptions = {
         minLength : 1
       };
+      settings.url = settings.url.replace("%7Bterm%7D","{term}");
       select = this;//jquery select object
       options = $.extend({}, defaultOptions, $(select).data(), settings);
       if (!chosenOptions) {
@@ -67,34 +68,25 @@
               });
           items = callback(data);
           nbItems = items.length;
-          $.each(items,
-              function(i, obj) {
-                if ($.inArray(obj.value + "-" + obj.text,
-                    selected_values) === -1) {
-                  return $("<option />").val(obj.value)
-                      .html(obj.text).appendTo(select);
-                }
-              });
+          $.each(items, function(i, obj) {
+            if($.inArray(obj.value + "-" + obj.text, selected_values) === -1) {
+              return $("<option />").val(obj.value).html(obj.text).appendTo(select);
+            }
+          });
           var chosen= select.data().chosen;
           if (nbItems) {
             select.trigger("chosen:updated.chosen");
             //field value missing after update.chosen
             field.val(raw_val);
             chosen.results_search();
-
-            if(typeof chosenOptions.as_combobox != "undefined" && chosenOptions.as_combobox){
-              if(chosen.search_results.length==1 && chosen.search_results.get(0).innerText.indexOf("没有找到结果")>=0){
-                select.find('option').each(function() {
-                  if ($(this).val()=='0') return $(this).remove();
-                });
-                $("<option selected='selected'/>").val('0').html(raw_val).prependTo(select);
-                select.trigger("chosen:updated.chosen");
-              }
-            }
-
           }else{
-            chosen.update_results_content("");
-            select.data().chosen.no_results(field.val());
+            //chosen.update_results_content("");
+            //select.data().chosen.no_results(field.val());
+            select.find('option').each(function() {
+              if ($(this).val().startsWith('0:')) return $(this).remove();
+            });
+            $("<option selected='selected'/>").val('0:'+raw_val).html(raw_val).prependTo(select);
+            select.trigger("chosen:updated.chosen");
           }
           if (settings.success != null) {
             settings.success(data);
