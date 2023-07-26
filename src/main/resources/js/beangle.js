@@ -358,8 +358,10 @@
         beangle.hideAjaxMessage();
         return false;
       };
-      jQuery(form).ajaxForm({success:handleResult,error:handleResult,url:action});
-      jQuery(form).submit();
+      require(["jquery-form"],function(){
+        jQuery(form).ajaxForm({success:handleResult,error:handleResult,url:action});
+        jQuery(form).submit();
+      })
     }
   };
 

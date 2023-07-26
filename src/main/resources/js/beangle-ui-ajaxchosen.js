@@ -2,13 +2,11 @@
   (function($) {
     return $.fn.ajaxchosen = function(settings, callback, chosenOptions) {
       var defaultOptions, options, select;
-      if (settings == null) {
-        settings = {};
-      }
+      if (settings == null) { settings = {}; }
       defaultOptions = {
         minLength : 1
       };
-      select = this;
+      select = this;//jquery select object
       options = $.extend({}, defaultOptions, $(select).data(), settings);
       if (!chosenOptions) {
         chosenOptions = {};
@@ -17,16 +15,14 @@
         chosenOptions.placeholder_text = "请输入内容查询";
       }
       if (!chosenOptions.no_results_text) {
-        chosenOptions.no_results_text = "没有匹配结果";
+        chosenOptions.no_results_text = "没有找到结果!";
       }
       this.chosen(chosenOptions);
       var search_field;
       if (this.prop('multiple')) {
-        search_field = this.next('.chosen-container').find(
-            ".search-field > input");
+        search_field = this.next('.chosen-container').find(".search-field > input");
       } else {
-        search_field = this.next('.chosen-container').find(
-            ".chosen-search > input");
+        search_field = this.next('.chosen-container').find(".chosen-search > input");
       }
 
       search_field.bind('ajaxchosen', function() {
@@ -54,7 +50,6 @@
             options.data[key] = value;
           });
         }
-        success = options.success;
         options.success = function(data) {
           var items, nbItems, selected_values;
           if (data == null) {
@@ -86,6 +81,17 @@
             //field value missing after update.chosen
             field.val(raw_val);
             chosen.results_search();
+
+            if(typeof chosenOptions.as_combobox != "undefined" && chosenOptions.as_combobox){
+              if(chosen.search_results.length==1 && chosen.search_results.get(0).innerText.indexOf("没有找到结果")>=0){
+                select.find('option').each(function() {
+                  if ($(this).val()=='0') return $(this).remove();
+                });
+                $("<option selected='selected'/>").val('0').html(raw_val).prependTo(select);
+                select.trigger("chosen:updated.chosen");
+              }
+            }
+
           }else{
             chosen.update_results_content("");
             select.data().chosen.no_results(field.val());
