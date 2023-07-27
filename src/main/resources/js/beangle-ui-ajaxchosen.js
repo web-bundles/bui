@@ -80,13 +80,16 @@
             field.val(raw_val);
             chosen.results_search();
           }else{
-            //chosen.update_results_content("");
-            //select.data().chosen.no_results(field.val());
-            select.find('option').each(function() {
-              if ($(this).val().startsWith('0:')) return $(this).remove();
-            });
-            $("<option selected='selected'/>").val('0:'+raw_val).html(raw_val).prependTo(select);
-            select.trigger("chosen:updated.chosen");
+            if(typeof chosenOptions.as_combobox != "undefined" && chosenOptions.as_combobox){
+              select.find('option').each(function() {
+                if ($(this).val().startsWith('0:')) return $(this).remove();
+              });
+              $("<option selected='selected'/>").val('0:'+raw_val).html(raw_val).prependTo(select);
+              select.trigger("chosen:updated.chosen");
+            }else{
+              chosen.update_results_content("");
+              select.data().chosen.no_results(field.val());
+            }
           }
           if (settings.success != null) {
             settings.success(data);
@@ -96,10 +99,10 @@
         return $.ajax(options);
       });
 
-     var inComposition=false;
-     search_field.on('compositionstart',function(){inComposition=true;})
-     search_field.on('compositionend',function(){inComposition=false;})
-     search_field.unbind("keyup");
+      var inComposition=false;
+      search_field.on('compositionstart',function(){inComposition=true;})
+      search_field.on('compositionend',function(){inComposition=false;})
+      search_field.unbind("keyup");
       var lastKeyUpTime = null;
       // 界定是否在输入的阈值（单位:毫秒）,如果一个用户在n毫秒内没有输入动作，那么就可以认为用户已经输入完毕可以执行ajax动作了
       var typingThreshold = 300;
