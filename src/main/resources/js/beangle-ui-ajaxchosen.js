@@ -35,7 +35,7 @@
         }
         selected_values = [];
         select.find('option').each(function() {
-          if (!$(this).is(":selected")) {
+          if ($(this).val() !="" && !$(this).is(":selected")) {//ignore empty
             return $(this).remove();
           } else {
             return selected_values.push($(this).val()  + "-" + $(this).text());

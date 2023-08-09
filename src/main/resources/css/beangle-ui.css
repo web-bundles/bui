@@ -24,7 +24,11 @@
 .text-mini{
   font-size:0.875rem !important;
 }
-
+.text-ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 /* grid */
 .grid{border-color:#006CB2;margin: 0px 0px 0px 0px ;font-size:.875rem !important;}
 
