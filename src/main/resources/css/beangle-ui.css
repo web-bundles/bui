@@ -409,7 +409,7 @@ div.search-footer .btn-sm{
 .formTable{
     border-collapse: collapse;
     border:solid;
-    border-width:1px;
+    border-width:0.5px;
     border-color:#006CB2;
     text-align: left;
 }
@@ -434,8 +434,8 @@ div.search-footer .btn-sm{
 .formTable td{
     border:solid;
     border-width:0px;
-    border-right-width:1px;
-    border-bottom-width:1px;
+    border-right-width:0.5px;
+    border-bottom-width:0.5px;
     border-color:#006CB2;
     color: #000000;
     text-decoration: none;

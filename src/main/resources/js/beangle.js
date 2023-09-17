@@ -1027,7 +1027,7 @@
         if(null == path) path = "/";
         if(!days) days = 30;
         var expires = new Date();
-        expires.setTime(expires.getTime() + (86400 * days)); //30days
+        expires.setTime(expires.getTime() + (86400 * 1000 * days)); //30days
         document.cookie = name + "=" + value + "; expires=" + expires.toGMTString() + "; path=" + path + ";SameSite=Strict";
       },
       remove: function(name, path, domain) {
