@@ -461,7 +461,7 @@ table.infoTable {
 }
 
 table.infoTable > tbody > tr > td {
-    border: 1px solid #FFFFFF;
+    border: 0.5px solid #FFFFFF;
     overflow:hidden;
     word-wrap:break-word;
 }
