@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version = "0.5.5";
+  beangle.version = "0.5.7";
   /** extend function */
   beangle.extend = function(map) {
     for(var attr in map) {
@@ -980,7 +980,7 @@
       },
       fillin: function(id, obj, value, keyName, valueName, chosenMin) {
         var is_restapi = Array.isArray(obj);
-        var datas = is_restapi ? obj : obj.datas;
+        var datas = is_restapi ? obj : obj.data;
         var select = $("#" + id);
         var cnt = 0;
         var rows = []
