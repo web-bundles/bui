@@ -372,11 +372,11 @@
       this.toolbars[i]=bg.ui.toolbar(divIds[i],title);
       this.toolbars[i].setSeparator("");
       if(i==0){
-        document.getElementById(divIds[i]).className="gridbar gridbar-top";
+        document.getElementById(divIds[i]).className="grid-bar";
       }else{
-        document.getElementById(divIds[i]).className="gridbar gridbar-bottom";
+        document.getElementById(divIds[i]).className="grid-bar";
       }
-      document.getElementById(divIds[i]+"_items").className="gridbar-items";
+      document.getElementById(divIds[i]+"_items").className="grid-bar-items";
     }
     this.pageId=function(givenId){
       this.pageId=givenId;
@@ -405,7 +405,7 @@
     this.addPage=function(onePage,ranks,titles){
       this.myPage=onePage;
       for(var i=0;i<this.toolbars.length;i++){
-        pageDiv=this.toolbars[i].appendDiv(divIds[i]+'_page',"girdbar-pgbar");
+        pageDiv=this.toolbars[i].appendDiv(divIds[i]+'_page',"grid-bar-pgbar");
         bg.ui.pagebar(onePage,pageDiv,ranks,titles);
       }
       return this;
@@ -485,7 +485,7 @@
 
     //add pageno input
     var pageInput=document.createElement('input');
-    pageInput.className="pgbar-input";
+    pageInput.className="pgbar-input border-1px border-blue";
     pagespan.appendChild(pageInput);
 
     var pageInputLabel = document.createElement('label');
@@ -550,11 +550,11 @@
       mouseOverGrid : function (){
         if((typeof this.className)=="undefined") return;
         var myclass=this.className;
-        selectIndex=myclass.indexOf("griddata-selected");
+        selectIndex=myclass.indexOf("grid-data-selected");
         if(-1 != selectIndex) return;
-        overIndex=myclass.indexOf("griddata-over");
+        overIndex=myclass.indexOf("grid-data-over");
         if(-1 == overIndex){
-          this.className=myclass+" "+ "griddata-over"
+          this.className=myclass+" "+ "grid-data-over"
         }else{
           this.className=myclass.substring(0,overIndex);
         }
@@ -583,17 +583,17 @@
 
         if(null==ownGridTable) return;
         var selectedCount=0;
-        jQuery("#"+ownGridTable.id + " .gridselect").each(function(){
+        jQuery("#"+ownGridTable.id + " .grid-select").each(function(){
           var inputs=jQuery(this).find("input");
           if(inputs.length==0)return;
           if(ele.checked){
             inputs.prop("checked",true);
-            jQuery(this).parent("tr").addClass("griddata-selected");
+            jQuery(this).parent("tr").addClass("grid-data-selected");
             selectedCount++;
           }else{
             if(inputs.is(":checked")){
               inputs.prop("checked",false);
-              jQuery(this).parent("tr").removeClass("griddata-selected");
+              jQuery(this).parent("tr").removeClass("grid-data-selected");
             }
           }
         });
@@ -603,7 +603,7 @@
       notifyGridbar: function (gridId,selectedCount){
         if(typeof selectedCount == "undefined"){
           selectedCount=0;
-          jQuery("#"+gridId + " .gridselect").each(function(){
+          jQuery("#"+gridId + " .grid-select").each(function(){
             if(jQuery(this).find("input").is(":checked")){
               selectedCount +=1;
             }
@@ -671,26 +671,26 @@
         // 改变选定行的颜色
         var row=firstCell.parentNode;
         if((typeof row.className)=="undefined") return;
-        if(ele.checked) jQuery(row).removeClass("griddata-over").addClass("griddata-selected");
-        else jQuery(row).removeClass("griddata-selected").addClass("griddata-over");
+        if(ele.checked) jQuery(row).removeClass("grid-data-over").addClass("grid-data-selected");
+        else jQuery(row).removeClass("grid-data-selected").addClass("grid-data-over");
 
         var selectedCount=0;
         if(ele.type=="radio") {
           if(ele.checked)  selectedCount=1;
         }else{
           var isReserveOtherSelect = !bg.ui.grid.enableSingleRowSelect || isFireOnBoxCell || event.ctrlKey ;
-          jQuery("#"+ownGridTable.id + " .gridselect").each(function(){
+          jQuery("#"+ownGridTable.id + " .grid-select").each(function(){
             if(jQuery(this).find("input").is(":checked")){
               if(firstCell != this && !isReserveOtherSelect){
                 jQuery(this).find("input").prop("checked",false);
-                jQuery(this).parent("tr").removeClass("griddata-selected");
+                jQuery(this).parent("tr").removeClass("grid-data-selected");
               }else{
                 selectedCount++;
               }
             }
           });
           if(!isReserveOtherSelect){
-            jQuery("#"+ownGridTable.id + " .gridselect-top").each(function(){
+            jQuery("#"+ownGridTable.id + " .grid-select-top").each(function(){
               jQuery(this).find("input").prop("checked",false);
             });
           }
@@ -706,14 +706,14 @@
           bg.alert("无法找到元素对应的排序表格！");return;
         }
         var orderByStr=null;
-        if(ele.className=="gridhead-sortable"){
+        if(ele.className=="grid-head-sortable"){
           if(typeof ele.asc!="undefined"){
             orderByStr=ele.asc;
           }
           else{
             orderByStr=ele.id+" asc";
           }
-        }else if(ele.className=="gridhead-asc"){
+        }else if(ele.className=="grid-head-asc"){
           if(typeof ele.desc!="undefined"){
             orderByStr=ele.desc;
           }
@@ -730,7 +730,7 @@
        * 初始化排序表格<br/>
        * 此函数主要是向已经待排序表格的列头1)添加鼠标事件响应和显示效果. 2)负责将事件传递到用户定义的函数中.
        *
-       * 凡是要排序的列,请注名排序单元格的id 和class. 其中id是排序要传递的字段,class为定值gridhead-kable.
+       * 凡是要排序的列,请注名排序单元格的id 和class. 其中id是排序要传递的字段,class为定值grid-head-sortable.
        * 除此之外,用户(使用该方法的人)需要自定义一个钩子函数"sortBy(what)",以备调用.
        *
        * @param tableId 待排序表格的id
@@ -749,7 +749,7 @@
           head=thead.rows[j];
           for(i=0;i<head.cells.length;i++){
             cell=head.cells[i];
-            if(cell.className=="gridhead-sortable" && null!=cell.id){
+            if(cell.className=="grid-head-sortable" && null!=cell.id){
               cell.onclick = columnSort;
               cell.onmouseover=bg.ui.grid.overSortTableHeader;
               cell.onmouseout=bg.ui.grid.outSortTableHeader;
@@ -759,8 +759,8 @@
                 desc=cell.desc;
               }
               if(orderBy.indexOf(desc)!=-1){
-                cell.className="gridhead-desc"
-                  cell.innerHTML=cell.innerHTML+'<span class="gridhead-icon action-sort-desc"></span>'
+                cell.className="grid-head-desc"
+                  cell.innerHTML=cell.innerHTML+'<span class="grid-head-icon action-sort-desc"></span>'
                 continue;
               }
               asc = cell.id+" asc";
@@ -768,8 +768,8 @@
                 asc = cell.asc;
               }
               if(orderBy==asc){
-                cell.className="gridhead-asc"
-                  cell.innerHTML=cell.innerHTML+'<span class="gridhead-icon action-sort-asc"></span>'
+                cell.className="grid-head-asc"
+                  cell.innerHTML=cell.innerHTML+'<span class="grid-head-icon action-sort-asc"></span>'
                 continue;
               }
             }
@@ -786,9 +786,9 @@
             orignRowCls="";
           }
           if(j%2==1){
-            row.className="griddata-odd" + orignRowCls;
+            row.className="grid-data-odd" + orignRowCls;
           }else{
-            row.className="griddata-even" + orignRowCls;
+            row.className="grid-data-even" + orignRowCls;
           }
           row.onclick = bg.ui.grid.toggleRow;
           row.onmouseover=bg.ui.grid.mouseOverGrid;
