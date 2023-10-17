@@ -46,6 +46,21 @@
   border-collapse: collapse;
 }
 
+.border-0px {
+  border-width: 0px;
+  border-style: hidden;
+}
+
+.border-0px-lr {
+  border-left: 0px hidden;
+  border-right: 0px hidden;
+}
+
+.border-0px-tb {
+  border-top: 0px hidden;
+  border-bottom: 0px hidden;
+}
+
 .border-blue {
   border-color: #006CB2 !important;
 }
@@ -69,8 +84,6 @@
 .grid-table {
   width: 100%;
   table-layout: fixed;
-  border-left: 0px hidden;
-  border-right: 0px hidden;
 }
 
 .grid-table td,
