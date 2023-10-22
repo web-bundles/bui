@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version = "0.6.1";
+  beangle.version = "0.6.2";
   /** extend function */
   beangle.extend = function(map) {
     for(var attr in map) {
@@ -329,17 +329,13 @@
         afterApplyState = null;
       }
     },
-    convertUrl: function(url) {
+    convertUrl: function(url) { //转换url为beangle.base + "#" + /root/path/to/resources
       var tail = null;
-      if(url.startsWith(beangle.base)) { //http://localhost:8080/context/menu
-        tail = url.substring(beangle.base.length);
-        return beangle.base + "#/" + tail;
-      } else if(url.startsWith(beangle.contextPath)) { //context/menu
-        tail = url.substring(document.location.origin.length);
-        return beangle.base + "#" + url.replace(beangle.contextPath, "/");
-      } else if(url.startsWith(document.location.origin)) { //http://localhost:8080/other_context/menu
+      if(url.startsWith(document.location.origin)) { // http://localhost:8080/what_else_context/menu
         tail = url.substring(document.location.origin.length);
         return beangle.base + "#" + tail;
+      } else if(url.startsWith(beangle.contextPath)) { // /context/menu
+        return beangle.base + "#" + url;
       } else {
         return beangle.base + "#" + url;
       }
