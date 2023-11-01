@@ -20,6 +20,12 @@
  * Beangle UI CSS Framework
  * LGPL version 3.
  */
+:root{
+  --grid-border-color:#006CB2;
+  --bar-bg-color:#c7dbff;
+  --search-bg-color:#E1ECFF;
+  --info-title-bg-color:#F5EDDB;
+}
 .text-mini {
   font-size: 0.875rem !important;
 }
@@ -61,8 +67,8 @@
   border-bottom: 0px hidden;
 }
 
-.border-blue {
-  border-color: #006CB2 !important;
+.border-colored {
+  border-color: var(--grid-border-color) !important;
 }
 
 /* grid */
@@ -88,7 +94,7 @@
 
 .grid-table td,
 .grid-table th {
-  border: 1px solid #006CB2;
+  border: 1px solid var(--grid-border-color);
   overflow: hidden;
 }
 
@@ -109,7 +115,7 @@
 
 .grid-select {
   text-align: center;
-  background-color: #e0ecff;
+  background-color: var(--search-bg-color);
 }
 
 .grid-select-top {
@@ -119,7 +125,7 @@
 .grid-head {
   color: #000000;
   letter-spacing: 0;
-  background-color: #c7dbff;
+  background-color: var(--bar-bg-color);
 }
 
 .grid-head-icon {
@@ -175,8 +181,8 @@
 
 .grid-bar {
   height: 1.4375rem;
-  background-color: #c7dbff;
-  border: 0px solid #006CB2;
+  background-color: var(--bar-bg-color);
+  border: 0px solid var(--grid-border-color);
   font-size: 0.875rem !important;
   overflow-x: auto;
 }
@@ -229,7 +235,7 @@
   padding: 0px 0px 2px 0px;
   border: solid;
   border-width: 1px;
-  border-color: #006CB2;
+  border-color: var(--grid-border-color);
   display: none;
 }
 
@@ -421,14 +427,14 @@ div.message img.icon {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   border-collapse: collapse;
-  border: 1px solid #006CB2;
+  border: 1px solid var(--grid-border-color);
   margin: 0px 0px 0px 0px;
   width: 100%;
 }
 
 .search-panel {
-  border: 0px solid #006CB2;
-  background-color: #E1ECFF;
+  border: 0px solid var(--grid-border-color);
+  background-color: var(--search-bg-color);
   font-size: 0.875rem !important;
   width: 100%;
 }
@@ -510,7 +516,7 @@ div.search-footer .btn-sm {
     width: calc(11rem - 1px);
     height: 23px;
     border: 0px solid;
-    background-color: #E1ECFF;
+    background-color: var(--search-bg-color);
     margin: 0px 0px 0px 0px;
     display: block;
     line-height: 100%;
@@ -536,13 +542,13 @@ table.infoTable>tbody>tr>td {
 }
 
 table.infoTable>thead>th {
-  background-color: #E1ECFF;
+  background-color: var(--search-bg-color);
   height: 22px;
 }
 
 table.infoTable td.title {
   height: 22px;
-  background-color: #F5EDDB;
+  background-color: var(--info-title-bg-color);
   padding-left: 2px;
   padding-right: 2px;
   text-align: right;
@@ -557,7 +563,7 @@ table.infoTitle {}
 table.settingTable td {
   border: solid;
   border-width: 0px;
-  border-color: #006CB2;
+  border-color: var(--grid-border-color);
   height: 30px;
 }
 
@@ -888,7 +894,7 @@ div#topLoadingMessageZone {
     border: 0.5px solid gray;
   }
   .search-container {
-    border: 0.5px solid #006CB2;
+    border: 0.5px solid var(--grid-border-color);
   }
   .search-item input[type="text"] {
     border: 0.5px solid gray;
@@ -908,7 +914,7 @@ div#topLoadingMessageZone {
   }
   .grid-table td,
   .grid-table th {
-    border: 0.5px solid #006CB2;
+    border: 0.5px solid var(--grid-border-color);
   }
 
   .border-1px {
@@ -929,7 +935,7 @@ div#topLoadingMessageZone {
     border: 0.333333px solid gray;
   }
   .search-container {
-    border: 0.333333px solid #006CB2;
+    border: 0.333333px solid var(--grid-border-color);
   }
   .search-item input[type="text"] {
     border: 0.333333px solid gray;
@@ -949,7 +955,7 @@ div#topLoadingMessageZone {
   }
   .grid-table td,
   .grid-table th {
-    border: 0.333333px solid #006CB2;
+    border: 0.333333px solid var(--grid-border-color);
   }
   .border-1px {
     border-width: 0.333333px;
