@@ -21,13 +21,13 @@
  * LGPL version 3.
  */
 :root{
+  --primary-color:#0076ff;
   --navbar-bg-color:#3c8dbc;
   --search-bg-color:#E1ECFF;
   --gridbar-bg-color:#c7dbff;
   --grid-border-color:#006CB2;
   --info-title-bg-color:#F5EDDB;
   --border-width-default:1px;
-  --primary-color:#0076ff;
 }
 .text-mini {
   font-size: 0.875rem !important;
@@ -137,12 +137,12 @@
 }
 
 .grid-head-asc {
-  background-color: #308dbb;
+  background-color: var(--navbar-bg-color);
   cursor: pointer;
 }
 
 .grid-head-desc {
-  background-color: #308dbb;
+  background-color: var(--navbar-bg-color);
   cursor: pointer;
 }
 
