@@ -86,6 +86,7 @@
 .grid {
   margin: 0px 0px 0px 0px;
   font-size: .875rem !important;
+  --grid-select-bg-color:#BFFFBF;
 }
 
 .grid-caption {
@@ -116,6 +117,19 @@
 
 .grid-body tr{
   text-align: center;
+  text-decoration: none;
+  letter-spacing: 0;
+}
+
+.grid-data-selected {
+}
+
+.grid-body tr:nth-of-type(even){
+  background-color: #f9f9f9;
+}
+
+.grid-body tr:nth-of-type(odd){
+  background-color: white;
 }
 
 .grid-filter-submit {
@@ -177,25 +191,7 @@
 
 .grid-data {}
 
-.grid-data-odd {
-  text-decoration: none;
-  letter-spacing: 0;
-  background-color: #f9f9f9;
-}
 
-.grid-data-even {
-  text-decoration: none;
-  letter-spacing: 0;
-  background-color: white;
-}
-
-.grid-data-selected {
-  background-color: #BFFFBF;
-}
-
-.grid-data-over {
-  background-color: #BFFFBF;
-}
 
 .grid-bar {
   height: 1.4375rem;

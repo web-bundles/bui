@@ -569,9 +569,9 @@
       },
       /** iframe 页面自适应大小
        * @targObj    iframe
-       * @extraHight
+       * @extraHeight
        */
-      adapt: function(targObj, extraHight) {
+      adapt: function(targObj, extraHeight) {
         var frames, targWin, totalHeight, myHeight;
         if(null == targObj || targObj.name == "")
           return;
@@ -583,7 +583,7 @@
         if(frames.length < 1) return;
         targWin = frames[0];
         if(targWin != null && (targWin.scrolling == "no" || targWin.className == "autoadapt")) {
-          totalHeight = targObj.document.body.scrollHeight + ((null == extraHight) ? 0 : extraHight);
+          totalHeight = targObj.document.body.scrollHeight + ((null == extraHeight) ? 0 : extraHeight);
           myHeight = 0;
           if(targWin.style.height) {
             myHeight = parseInt(targWin.style.height.substring(0, targWin.style.height.length - 2));

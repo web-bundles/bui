@@ -552,11 +552,10 @@
         var myclass=this.className;
         selectIndex=myclass.indexOf("grid-data-selected");
         if(-1 != selectIndex) return;
-        overIndex=myclass.indexOf("grid-data-over");
-        if(-1 == overIndex){
-          this.className=myclass+" "+ "grid-data-over"
+        if(this.style.backgroundColor==""){
+          this.style.backgroundColor="var(--grid-select-bg-color)";
         }else{
-          this.className=myclass.substring(0,overIndex);
+          this.style.backgroundColor=""
         }
       },
       setGridMessage : function (gridId,message){
@@ -588,12 +587,12 @@
           if(inputs.length==0)return;
           if(ele.checked){
             inputs.prop("checked",true);
-            jQuery(this).parent("tr").addClass("grid-data-selected");
+            jQuery(this).parent("tr").addClass("grid-data-selected").css({"background-color":'var(--grid-select-bg-color)'});
             selectedCount++;
           }else{
             if(inputs.is(":checked")){
               inputs.prop("checked",false);
-              jQuery(this).parent("tr").removeClass("grid-data-selected");
+              jQuery(this).parent("tr").removeClass("grid-data-selected").css({"background-color":''});
             }
           }
         });
@@ -671,8 +670,12 @@
         // 改变选定行的颜色
         var row=firstCell.parentNode;
         if((typeof row.className)=="undefined") return;
-        if(ele.checked) jQuery(row).removeClass("grid-data-over").addClass("grid-data-selected");
-        else jQuery(row).removeClass("grid-data-selected").addClass("grid-data-over");
+        if(ele.checked) {
+          jQuery(row).addClass("grid-data-selected").css({"background-color":'var(--grid-select-bg-color)'});
+        }else{
+          jQuery(row).removeClass("grid-data-selected");
+          //.css({"background-color":''}); this color will remove by mouseOut
+        }
 
         var selectedCount=0;
         if(ele.type=="radio") {
@@ -779,17 +782,6 @@
         if(!tbody)  return;
         for(j=0;j<tbody.rows.length;j++){
           row=tbody.rows[j];
-          orignRowCls=row.className;
-          if(orignRowCls){
-            orignRowCls=" "+orignRowCls;
-          }else{
-            orignRowCls="";
-          }
-          if(j%2==1){
-            row.className="grid-data-odd" + orignRowCls;
-          }else{
-            row.className="grid-data-even" + orignRowCls;
-          }
           row.onclick = bg.ui.grid.toggleRow;
           row.onmouseover=bg.ui.grid.mouseOverGrid;
           row.onmouseout=bg.ui.grid.mouseOverGrid;
@@ -861,7 +853,7 @@
       return shortAction+"!"+method+sufix;
     }
   }
-  // Action---------------------------------------------------------------------
+  // Action
   function EntityAction(entity,onePage){
     this.entity=entity;
     this.page=onePage;
