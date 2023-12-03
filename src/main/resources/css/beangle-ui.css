@@ -111,8 +111,11 @@
 
 .grid-table tr {
   word-wrap: break-word;
-  text-align: center;
   text-decoration: none;
+}
+
+.grid-body tr{
+  text-align: center;
 }
 
 .grid-filter-submit {
@@ -166,6 +169,10 @@
 
 .grid-head select {
   height: 1.4375rem;
+}
+
+.grid-head tr{
+  text-align: center;
 }
 
 .grid-data {}
