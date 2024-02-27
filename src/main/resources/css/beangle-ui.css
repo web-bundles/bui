@@ -39,6 +39,14 @@
   white-space: nowrap;
 }
 
+.text-ellipsis2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: pre-wrap;
+}
+
 .border-1px {
   border-width: var(--border-width-default);
   border-style: solid;
