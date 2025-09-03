@@ -571,6 +571,26 @@ table.infoTable td.content {
 
 table.infoTitle {}
 
+/*详细信息页面2*/
+table.table-detail{
+  table-layout:fixed;
+}
+
+table.table-detail td.title{
+  padding: 0.2rem 0rem;
+  text-align: right;
+  color: #6c757d !important;
+}
+
+/*mini数据列表*/
+table.table-mini th{
+  color:#6c757d !important;
+  font-weight: normal;
+}
+table.table-mini{
+  table-layout: fixed;
+}
+
 table.settingTable td {
   border: solid;
   border-width: 0px;
