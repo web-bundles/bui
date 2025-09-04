@@ -664,6 +664,7 @@ fieldset.listset>ol>li {
   padding: 4px 10px 7px;
   list-style: none outside none;
   margin: 0;
+  min-height:1.850rem;
 }
 
 fieldset.listset li.foot {
