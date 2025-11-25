@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version = "0.6.6";
+  beangle.version = "0.6.7";
   /** extend function */
   beangle.extend = function(map) {
     for(var attr in map) {
@@ -353,7 +353,8 @@
         beangle.history.snapshot();
         var state = History.getState() || { id: "" };
         var parentId = state.id;
-        History.pushState({ content: result, container: target, parentId: parentId }, "", beangle.history.convertUrl(action));
+        var content = (typeof result.responseText == "undefined")?result:result.responseText;
+        History.pushState({ content: content, container: target, parentId: parentId }, "", beangle.history.convertUrl(action));
         beangle.hideAjaxMessage();
         return false;
       };
