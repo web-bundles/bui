@@ -752,7 +752,9 @@
           head=thead.rows[j];
           for(i=0;i<head.cells.length;i++){
             cell=head.cells[i];
-            if(cell.className=="grid-head-sortable" && null!=cell.id){
+            if (i===0){
+              jQuery(cell).find(".grid-toggle-all").on("click",bg.ui.grid.toggleAll);
+            }else if(cell.className=="grid-head-sortable" && null!=cell.id){
               cell.onclick = columnSort;
               cell.onmouseover=bg.ui.grid.overSortTableHeader;
               cell.onmouseout=bg.ui.grid.outSortTableHeader;
