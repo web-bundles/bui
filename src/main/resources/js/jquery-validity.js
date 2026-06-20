@@ -1183,7 +1183,6 @@ __private = {
     };
 })(jQuery);
 
-
 // Install the label output.
 (function($) {
     function getIdentifier($obj) {
