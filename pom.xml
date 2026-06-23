@@ -11,6 +11,33 @@
   <version>0.7.2</version>
   <packaging>jar</packaging>
   <name>Beangle Bundles Beangle UI</name>
+  <description>Beangle UI static assets (JavaScript, CSS, images) packaged as a Maven bundle for web applications.</description>
+
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License</name>
+      <url>http://www.gnu.org/licenses/lgpl.txt</url>
+    </license>
+  </licenses>
+
+  <url>https://github.com/web-bundles/bui</url>
+
+  <scm>
+    <connection>scm:git:git://github.com/web-bundles/bui.git</connection>
+    <developerConnection>scm:git:git@github.com:web-bundles/bui.git</developerConnection>
+    <url>https://github.com/web-bundles/bui</url>
+  </scm>
+
+  <developers>
+    <developer>
+      <name>Tihua Duan</name>
+      <id>chaostone</id>
+      <email>duantihua@gmail.com</email>
+      <roles>
+        <role>Committer</role>
+      </roles>
+    </developer>
+  </developers>
 
   <properties>
     <bundle.symbolicName>org.beangle.bundles.bui</bundle.symbolicName>
