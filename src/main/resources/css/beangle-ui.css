@@ -29,6 +29,12 @@
   --info-title-bg-color:#F5EDDB;
   --border-width-default:1px;
 }
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
 .text-mini {
   font-size: 0.875rem !important;
 }
@@ -861,7 +867,7 @@ fieldset.listset li>input:focus {
 
 .nav-tabs.nav-tabs-compact .nav-link,
 .nav-tabs.nav-tabs-compact > li > a {
-  padding: 0.25rem 1rem 6px;
+  padding: 0.25rem 0.75rem 4px;
   margin-bottom: 0;
   border: none;
   border-bottom: 2px solid #e2e8f0;
@@ -869,6 +875,7 @@ fieldset.listset li>input:focus {
   background: transparent;
   color: #64748b;
   font-weight: 400;
+  font-size: 0.875rem;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 
@@ -887,7 +894,7 @@ fieldset.listset li>input:focus {
   background: transparent;
   border: none;
   border-bottom: 2px solid var(--primary-color, #0076ff);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .nav-tabs.nav-tabs-compact .nav-link:focus,
