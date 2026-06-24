@@ -1177,3 +1177,31 @@ div#topLoadingMessageZone {
   background-color: #dc3545;
   border-color: #d32535;
 }
+
+.content-header {
+    padding: 15px 0.5rem;
+}
+
+.text-sm .content-header {
+    padding: 10px 0.5rem;
+}
+
+.content-header h1 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.content-header .breadcrumb {
+    background-color: transparent;
+    line-height: 1.8rem;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.text-sm .content-header h1 {
+    font-size: 1.5rem;
+}
+
+.text-sm .content-header .breadcrumb {
+    line-height: 1.5rem;
+}
