@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version = "0.7.3";
+  beangle.version = "0.8.0";
   beangle.base = null;
   beangle.staticBase = null;
   beangle.contextPath = null;
@@ -1614,6 +1614,29 @@
       beangle.amd.styleCache[path] = true;
     }
   };
+
+  /** 门户主题色：localStorage beangle.ui.theme → :root CSS 变量（head 加载 beangle.js 时尽早应用） */
+  beangle.ui = beangle.ui || {};
+  beangle.ui.themeStorageKey = "beangle.ui.theme";
+  beangle.ui.applyStoredTheme = function () {
+    try {
+      if (typeof localStorage === "undefined") return false;
+      var raw = localStorage.getItem(beangle.ui.themeStorageKey);
+      if (!raw) return false;
+      var t = JSON.parse(raw);
+      if (!t || typeof t !== "object") return false;
+      var r = document.documentElement;
+      if (t.primaryColor) r.style.setProperty("--primary-color", t.primaryColor);
+      if (t.navbarBgColor) r.style.setProperty("--navbar-bg-color", t.navbarBgColor);
+      if (t.searchBgColor) r.style.setProperty("--search-bg-color", t.searchBgColor);
+      if (t.gridbarBgColor) r.style.setProperty("--gridbar-bg-color", t.gridbarBgColor);
+      if (t.gridBorderColor) r.style.setProperty("--grid-border-color", t.gridBorderColor);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+  beangle.ui.applyStoredTheme();
 
   beangle.ready(beangle.iframe.adaptSelf);
   beangle.getContextPath();

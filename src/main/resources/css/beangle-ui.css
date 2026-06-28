@@ -108,6 +108,9 @@ html {
     font-size: 1.5rem !important;
 }
 
+a {
+  color: var( --primary-color)
+}
 /* grid */
 .grid {
   margin: 0px 0px 0px 0px;
@@ -134,6 +137,7 @@ html {
 .grid-table th {
   border: var(--border-width-default) solid var(--grid-border-color);
   overflow: hidden;
+  padding:3px 0;
 }
 
 .grid-table tr {
@@ -216,8 +220,6 @@ html {
 }
 
 .grid-data {}
-
-
 
 .grid-bar {
   height: 1.4375rem;
