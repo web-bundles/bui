@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version = "0.8.0";
+  beangle.version = "0.8.1";
   beangle.base = null;
   beangle.staticBase = null;
   beangle.contextPath = null;
@@ -42,7 +42,9 @@
 
   /** 无界子应用内嵌片段走 import-html-entry 一类解析时，常按 script 标签分段执行；响应末尾若无闭合的 script 段，内联脚本可能被漏执行，补无害占位脚本兜底。 */
   beangle.postProcessHtml = function(html) {
-    const suffix="</script>"
+    if (html == null) return "";
+    if (typeof html !== "string") html = String(html);
+    const suffix = "</script>";
     const endWithScript = html.indexOf(suffix, html.length - suffix.length) !== -1;
     return endWithScript ? html : html + "<script>void 0;</script>";
   };
