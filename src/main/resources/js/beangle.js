@@ -1397,6 +1397,9 @@
         var ret = factory.apply(null, inj);
         if (id != null && id !== "") {
           named[id] = ret !== undefined ? ret : exp;
+        } else if (beangle.amd._currentScriptModule) {
+          /* UMD 匿名 define(["exports"], factory) 时按正在加载的模块 id 登记导出 */
+          named[beangle.amd._currentScriptModule] = ret !== undefined ? ret : exp;
         }
       }
       defineFn.amd = {};
@@ -1416,6 +1419,8 @@
     loadedModuleIds: {},
     /** 动态 import() 得到的模块命名空间（按模块 id），供 pickModuleExport 使用 */
     esmNamespaces: {},
+    /** appendScriptOnce 加载期间，供 define shim 关联匿名 AMD 导出 */
+    _currentScriptModule: null,
     /** staticBase + mod.js，再解析为绝对 href（import 与 script 共用） */
     resolveModuleUrl: function (name) {
       var mod = beangle.amd.modules[name];
@@ -1470,32 +1475,57 @@
       var s = document.createElement("script");
       s.async = false;
       s.src = url;
+      beangle.amd._currentScriptModule = name;
       s.onload = function () {
+        beangle.amd._currentScriptModule = null;
         beangle.amd.loadedModuleIds[name] = true;
         beangle.logger.info("loaded JS module: " + name);
         done(null);
       };
       s.onerror = function () {
+        beangle.amd._currentScriptModule = null;
         done(new Error("beangle: failed to load " + url));
       };
       var head = document.head || document.getElementsByTagName("head")[0];
       head.appendChild(s);
     },
     /**
-     * 加载单个已注册模块：先动态 import；失败则回退 &lt;script&gt;。
+     * import() 得到的命名空间是否无可用导出（UMD 经 AMD 分支时常见）。
+     */
+    isEmptyEsmNamespace: function (ns) {
+      if (!ns || typeof ns !== "object") return true;
+      if (typeof ns.default !== "undefined") return false;
+      var keys = Object.keys(ns).filter(function (k) {
+        return k !== "__esModule";
+      });
+      return keys.length === 0;
+    },
+    /**
+     * 加载单个已注册模块：先 dynamic import；空命名空间或失败则回退 &lt;script&gt;。
+     * 注册项 script:true 时跳过 import，直接插入 script（纯 UMD/IIFE）。
      */
     loadModuleOnce: function (name, done) {
       if (beangle.amd.loadedModuleIds[name]) {
         done(null);
         return;
       }
+      var mod = beangle.amd.modules[name];
       var url = beangle.amd.resolveModuleUrl(name);
       if (!url) {
         done(new Error("beangle: unknown module or missing js path: " + name));
         return;
       }
+      if (mod && mod.script) {
+        beangle.amd.appendScriptOnce(name, done);
+        return;
+      }
       import(url)
         .then(function (ns) {
+          if (beangle.amd.isEmptyEsmNamespace(ns)) {
+            beangle.logger.info("empty ESM namespace for " + name + ", fallback to script");
+            beangle.amd.appendScriptOnce(name, done);
+            return;
+          }
           beangle.amd.loadedModuleIds[name] = true;
           beangle.amd.esmNamespaces[name] = ns;
           beangle.logger.info("loaded JS module: " + name);
