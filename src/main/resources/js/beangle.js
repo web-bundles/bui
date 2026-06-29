@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version = "0.8.1";
+  beangle.version = "0.8.2";
   beangle.base = null;
   beangle.staticBase = null;
   beangle.contextPath = null;
@@ -1291,9 +1291,9 @@
 
   /**
    * 轻量模块加载（替代 RequireJS）：按 amd.modules 注册表解析 URL、处理 deps 拓扑、
-   * dynamic import 优先、失败则顺序插入 script；导出见 pickModuleExport。
-   * 若页面无 RequireJS，会安装极简 define shim，捕获脚本内的 define("id",deps,factory)，
-   * 便于 bg.require(["echarts"],function(echarts){}) 拿到与具名 id 一致的导出。
+   * 默认顺序插入 script（UMD/IIFE）；注册项 import:true 时走 dynamic import()。
+   * 导出见 pickModuleExport。若页面无 RequireJS，会安装极简 define shim，
+   * 捕获脚本内的 define("id",deps,factory)，便于 bg.require(["echarts"],function(echarts){}) 拿到导出。
    * shim 在本对象赋值结束后调用一次 ensureDefineCapture 即可（内部幂等）。
    */
   beangle.amd = {
@@ -1492,19 +1492,7 @@
       head.appendChild(s);
     },
     /**
-     * import() 得到的命名空间是否无可用导出（UMD 经 AMD 分支时常见）。
-     */
-    isEmptyEsmNamespace: function (ns) {
-      if (!ns || typeof ns !== "object") return true;
-      if (typeof ns.default !== "undefined") return false;
-      var keys = Object.keys(ns).filter(function (k) {
-        return k !== "__esModule";
-      });
-      return keys.length === 0;
-    },
-    /**
-     * 加载单个已注册模块：先 dynamic import；空命名空间或失败则回退 &lt;script&gt;。
-     * 注册项 script:true 时跳过 import，直接插入 script（纯 UMD/IIFE）。
+     * 加载单个已注册模块：默认 &lt;script&gt; 顺序插入；注册项 import:true 时走 dynamic import()。
      */
     loadModuleOnce: function (name, done) {
       if (beangle.amd.loadedModuleIds[name]) {
@@ -1517,25 +1505,20 @@
         done(new Error("beangle: unknown module or missing js path: " + name));
         return;
       }
-      if (mod && mod.script) {
-        beangle.amd.appendScriptOnce(name, done);
+      if (mod && mod.import) {
+        import(url)
+          .then(function (ns) {
+            beangle.amd.loadedModuleIds[name] = true;
+            beangle.amd.esmNamespaces[name] = ns;
+            beangle.logger.info("loaded JS module (import): " + name);
+            done(null);
+          })
+          .catch(function (err) {
+            done(new Error("beangle: failed to import " + url + ": " + (err && err.message ? err.message : err)));
+          });
         return;
       }
-      import(url)
-        .then(function (ns) {
-          if (beangle.amd.isEmptyEsmNamespace(ns)) {
-            beangle.logger.info("empty ESM namespace for " + name + ", fallback to script");
-            beangle.amd.appendScriptOnce(name, done);
-            return;
-          }
-          beangle.amd.loadedModuleIds[name] = true;
-          beangle.amd.esmNamespaces[name] = ns;
-          beangle.logger.info("loaded JS module: " + name);
-          done(null);
-        })
-        .catch(function (err) {
-          beangle.amd.appendScriptOnce(name, done);
-        });
+      beangle.amd.appendScriptOnce(name, done);
     },
     /**
      * 仅加载 JS（不处理 css）。callBack 参数顺序与 seedNames 一致，值为 ESM 命名空间或 window 探测（见 pickModuleExport）。
