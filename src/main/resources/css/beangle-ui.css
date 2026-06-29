@@ -137,7 +137,7 @@ a {
 .grid-table th {
   border: var(--border-width-default) solid var(--grid-border-color);
   overflow: hidden;
-  padding:3px 0;
+  padding:2px 0;
 }
 
 .grid-table tr {

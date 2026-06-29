@@ -1400,11 +1400,11 @@
         if (id != null && id !== "") {
           named[id] = ret !== undefined ? ret : exp;
         } else if (beangle.amd._currentScriptModule) {
-          /* UMD 匿名 define(["exports"], factory) 时按正在加载的模块 id 登记导出 */
+          /* 具名 id 缺失时（少见），按正在加载的模块 id 登记 */
           named[beangle.amd._currentScriptModule] = ret !== undefined ? ret : exp;
         }
       }
-      defineFn.amd = {};
+      /* 不设置 define.amd，避免 UMD 走 AMD 分支却不挂 window、匿名 define 无法对应模块 id */
       window.define = defineFn;
     },
     register: function (base, modules) {
@@ -1423,6 +1423,25 @@
     esmNamespaces: {},
     /** appendScriptOnce 加载期间，供 define shim 关联匿名 AMD 导出 */
     _currentScriptModule: null,
+    /** script 执行后从 window 探测导出并写入 namedExports */
+    syncNamedExportFromWindow: function (name) {
+      if (Object.prototype.hasOwnProperty.call(beangle.amd.namedExports, name)) return;
+      var mod = beangle.amd.modules[name];
+      if (mod && mod.global && typeof window[mod.global] !== "undefined") {
+        beangle.amd.namedExports[name] = window[mod.global];
+        return;
+      }
+      if (typeof window[name] !== "undefined") {
+        beangle.amd.namedExports[name] = window[name];
+        return;
+      }
+      var camel = name.replace(/-([a-z])/g, function (_, c) {
+        return c.toUpperCase();
+      });
+      if (typeof window[camel] !== "undefined") {
+        beangle.amd.namedExports[name] = window[camel];
+      }
+    },
     /** staticBase + mod.js，再解析为绝对 href（import 与 script 共用） */
     resolveModuleUrl: function (name) {
       var mod = beangle.amd.modules[name];
@@ -1480,6 +1499,7 @@
       beangle.amd._currentScriptModule = name;
       s.onload = function () {
         beangle.amd._currentScriptModule = null;
+        beangle.amd.syncNamedExportFromWindow(name);
         beangle.amd.loadedModuleIds[name] = true;
         beangle.logger.info("loaded JS module: " + name);
         done(null);
