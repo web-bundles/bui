@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version = "0.8.2";
+  beangle.version = "0.8.3";
   beangle.base = null;
   beangle.staticBase = null;
   beangle.contextPath = null;
@@ -1442,18 +1442,28 @@
         beangle.amd.namedExports[name] = window[camel];
       }
     },
-    /** staticBase + mod.js，再解析为绝对 href（import 与 script 共用） */
+    /** mod.js / require 参数是否为 http(s) 绝对资源地址 */
+    isAbsoluteResourceUrl: function (s) {
+      return typeof s === "string" && (s.indexOf("http://") === 0 || s.indexOf("https://") === 0);
+    },
+    /** staticBase 相对路径或原样返回绝对 URL */
+    resolveResourceUrl: function (path, base) {
+      if (beangle.amd.isAbsoluteResourceUrl(path)) return path;
+      var b = base || "";
+      if (b && b.slice(-1) !== "/") b += "/";
+      var combined = b + path;
+      try {
+        return new URL(combined, window.location.href).href;
+      } catch (e) {
+        return combined;
+      }
+    },
+    /** 注册项 mod.js 或 require 中直接传入的 http(s) URL → 可加载的 script href */
     resolveModuleUrl: function (name) {
+      if (beangle.amd.isAbsoluteResourceUrl(name)) return name;
       var mod = beangle.amd.modules[name];
       if (!mod || !mod.js) return null;
-      var base = beangle.staticBase || "";
-      if (base && base.slice(-1) !== "/") base += "/";
-      var path = base + mod.js;
-      try {
-        return new URL(path, window.location.href).href;
-      } catch (e) {
-        return path;
-      }
+      return beangle.amd.resolveResourceUrl(mod.js, beangle.staticBase || "");
     },
     /**
      * 按 deps 拓扑展开，保证依赖先于当前模块加载。
@@ -1615,7 +1625,8 @@
   beangle.require = function (names, callBack) {
     var requireModules = [];
     for (var i = 0; i < names.length; i++) {
-      var module = beangle.amd.modules[names[i]];
+      var name = names[i];
+      var module = beangle.amd.modules[name];
       if (module) {
         if (module.css) {
           for (var j = 0; j < module.css.length; j++) {
@@ -1623,10 +1634,12 @@
           }
         }
         if (module.js) {
-          requireModules.push(names[i]);
+          requireModules.push(name);
         }
+      } else if (beangle.amd.isAbsoluteResourceUrl(name)) {
+        requireModules.push(name);
       } else {
-        beangle.logger.error("beangle.require: module not registered: " + names[i]);
+        beangle.logger.error("beangle.require: module not registered: " + name);
       }
     }
     if (requireModules.length > 0) {
@@ -1639,7 +1652,7 @@
   };
   /** Load required CSS Files */
   beangle.requireCss = function (cssFile, basePath) {
-    var path = (basePath || "") + cssFile;
+    var path = beangle.amd.resolveResourceUrl(cssFile, basePath || "");
     if (!beangle.amd.styleCache[path]) {
       var link = document.createElement("link");
       link.setAttribute("rel", "stylesheet");
