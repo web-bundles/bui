@@ -22,7 +22,7 @@
     return true;
   };
 
-  beangle.version = "0.8.3";
+  beangle.version = "0.8.4";
   beangle.base = null;
   beangle.staticBase = null;
   beangle.contextPath = null;
